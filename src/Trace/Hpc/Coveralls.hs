@@ -9,7 +9,8 @@ tixToJson _ = "TODO"
 
 generateCoverallsFromTix :: String -> IO ()
 generateCoverallsFromTix name = do
-    mtix <- readTix $ "dist/hpc/tix/" ++ name ++ "/" ++ (getTixFileName name)
+    mtix <- readTix path
     case mtix of
-        Nothing -> return ()
+        Nothing -> error $ "Couldn't find the file " ++ path
         Just tix -> putStrLn $ tixToJson tix
+    where path = "dist/hpc/tix/" ++ name ++ "/" ++ (getTixFileName name)
