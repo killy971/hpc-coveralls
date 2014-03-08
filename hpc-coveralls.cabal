@@ -1,0 +1,28 @@
+name:                hpc-coveralls
+version:             0.1.0.0
+synopsis:            Coveralls support for Haskell.
+license:             BSD3
+license-file:        LICENSE
+author:              Guillaume Nargeot
+maintainer:          guillaume@nargeot.com
+copyright:           (c) Guillaume Nargeot 2014
+category:            Control
+build-type:          Simple
+cabal-version:       >=1.9.2
+
+source-repository head
+  type: git
+  location: git://github.com/guillaume-nargeot/hpc-coveralls.git
+
+executable hpc-coveralls
+  hs-source-dirs:      src
+  main-is:             Main.hs
+  build-depends:       base, hpc
+  ghc-options:         -Wall -Werror -O2
+
+test-suite test-all
+  hs-source-dirs:      src, test
+  type:                exitcode-stdio-1.0
+  main-is:             TestAll.hs
+  build-depends:       base, hpc, HUnit, Cabal >= 1.9.2
+  ghc-options:         -Wall -Werror -O2
