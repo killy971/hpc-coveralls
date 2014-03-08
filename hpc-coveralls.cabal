@@ -12,7 +12,7 @@ cabal-version:       >=1.9.2
 
 source-repository head
   type: git
-  location: git://github.com/guillaume-nargeot/hpc-coveralls.git
+  location: https://github.com/guillaume-nargeot/hpc-coveralls.git
 
 executable hpc-coveralls
   hs-source-dirs:      src
