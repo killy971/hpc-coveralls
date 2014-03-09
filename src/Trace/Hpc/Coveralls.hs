@@ -13,4 +13,4 @@ generateCoverallsFromTix name = do
     case mtix of
         Nothing -> error $ "Couldn't find the file " ++ path
         Just tix -> putStrLn $ tixToJson tix
-    where path = "dist/hpc/tix/" ++ name ++ "/" ++ (getTixFileName name)
+    where path = "dist/hpc/tix/" ++ name ++ "/" ++ getTixFileName name
