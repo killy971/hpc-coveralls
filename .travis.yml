@@ -1,1 +1,10 @@
 language: haskell
+
+before_install:
+  - sudo apt-get -q -y install hlint || cabal install hlint
+
+script:
+  - hlint . --ignore="Parse error"
+  - cabal configure --enable-tests
+  - cabal build
+  - cabal test
