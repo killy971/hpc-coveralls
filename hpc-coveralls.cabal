@@ -17,12 +17,12 @@ source-repository head
 executable hpc-coveralls
   hs-source-dirs:      src
   main-is:             Main.hs
-  build-depends:       base, hpc
+  build-depends:       aeson, base, bytestring, hpc, text
   ghc-options:         -Wall -Werror -O2
 
 test-suite test-all
   hs-source-dirs:      src, test
   type:                exitcode-stdio-1.0
   main-is:             TestAll.hs
-  build-depends:       base, hpc, HUnit, Cabal >= 1.9.2
+  build-depends:       aeson, base, bytestring, hpc, text, HUnit, Cabal >= 1.9.2
   ghc-options:         -Wall -Werror -O2

@@ -1,16 +1,22 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Trace.Hpc.Coveralls where
 
+import Data.Aeson
+import Data.Text
 import Trace.Hpc.Tix
+import qualified Data.ByteString.Lazy.Char8 as BSL
 
--- dist/hpc/tix
+tixDir :: String
+tixDir = "dist/hpc/tix/"
 
-tixToJson :: Tix -> String
-tixToJson _ = "TODO"
+tixToJson :: Tix -> Value
+tixToJson _ = object [ "coveralls-support" .= ("TODO" :: Text)]
 
 generateCoverallsFromTix :: String -> IO ()
 generateCoverallsFromTix name = do
     mtix <- readTix path
     case mtix of
         Nothing -> error $ "Couldn't find the file " ++ path
-        Just tix -> putStrLn $ tixToJson tix
-    where path = "dist/hpc/tix/" ++ name ++ "/" ++ getTixFileName name
+        Just tix -> BSL.putStrLn $ encode (tixToJson tix)
+    where path = tixDir ++ name ++ "/" ++ getTixFileName name
