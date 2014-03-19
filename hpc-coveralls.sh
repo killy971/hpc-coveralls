@@ -10,6 +10,5 @@ fi
 JSON_FILE="$SERVICE_NAME-$JOB_ID.json"
 
 hpc-coveralls $SERVICE_NAME $JOB_ID $*
-cat $JSON_FILE
 
-# curl -F json_file=@$JSON_FILE https://coveralls.io/api/v1/jobs
+curl -F json_file=@$JSON_FILE https://coveralls.io/api/v1/jobs
