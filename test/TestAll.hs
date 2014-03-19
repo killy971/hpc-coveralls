@@ -16,4 +16,3 @@ main = do
     if errors cnt + failures cnt == 0
         then exitSuccess
         else exitFailure
-
