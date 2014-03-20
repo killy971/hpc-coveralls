@@ -47,3 +47,7 @@ As Coveralls doesn't support yet partial-line coverage, the following convention
 (this convention is the same as the one used by [cloverage](https://github.com/lshift/cloverage) coveralls output)
 
 There's an [open issue](https://github.com/lemurheavy/coveralls-public/issues/216) to improve this.
+
+# Notes
+
+- HPC publication: http://ittc.ku.edu/~andygill/papers/Hpc07.pdf
