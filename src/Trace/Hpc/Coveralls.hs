@@ -4,8 +4,6 @@ module Trace.Hpc.Coveralls (generateCoverallsFromTix) where
 
 import Data.Aeson
 import Data.Aeson.Types ()
-import Data.List
-import Data.Ord
 import Trace.Hpc.Lix
 import Trace.Hpc.Mix
 import Trace.Hpc.Tix
@@ -62,11 +60,10 @@ toCoverallsJson serviceName jobId coverageData = object [
 
 toCoverageData :: String -> Tix -> IO [CoverageData]
 toCoverageData name (Tix tixs) = do
-    mixs <- mapM readMix' sortedTixs
+    mixs <- mapM readMix' tixs
     sources <- mapM readSource mixs
-    return $ zip3 sources mixs sortedTixs
-    where sortedTixs = sortBy (comparing tixModuleName) tixs
-          readMix' tix = readMix [mixPath] (Right tix)
+    return $ zip3 sources mixs tixs
+    where readMix' tix = readMix [mixPath] (Right tix)
           mixPath = mixDir ++ name ++ "/"
           readSource (Mix filePath _ _ _ _) = readFile filePath
 
