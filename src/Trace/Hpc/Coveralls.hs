@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Trace.Hpc.Coveralls (generateCoverallsFromTix) where
+module Trace.Hpc.Coveralls where
 
 import Data.Aeson
 import Data.Aeson.Types ()

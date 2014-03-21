@@ -1,4 +1,4 @@
-module Trace.Hpc.Lix (Hit (..), Lix, toLix) where
+module Trace.Hpc.Lix where
 
 import Data.List
 import Data.Ord

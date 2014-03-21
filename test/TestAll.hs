@@ -2,13 +2,11 @@ module Main where
 
 import System.Exit ( exitFailure, exitSuccess )
 import Test.HUnit
-
-testHpcCoveralls :: Test
-testHpcCoveralls = "HPC-Coveralls" ~: [
-    True ~=? True]
+import TestHpcCoveralls
+import TestHpcLix
 
 allTests :: [Test]
-allTests = [testHpcCoveralls]
+allTests = [testHpcCoveralls, testHpcLix]
 
 main :: IO Counts
 main = do
