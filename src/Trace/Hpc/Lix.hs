@@ -30,12 +30,7 @@ getLine = fffst . fromHpcPos . fst
     where fffst (x, _, _, _) = x
 
 toLineHit :: (MixEntry, Integer) -> (Int, Bool)
-toLineHit (entry, cnt) = (line - 1, isHit (snd entry))
-    where line = getLine entry
-          isHit (ExpBox _) = cnt > 0
-          isHit (TopLevelBox _) = cnt > 0
-          isHit (LocalBox _) = cnt > 0
-          isHit (BinBox _ _) = cnt > 0
+toLineHit (entry, cnt) = (getLine entry - 1, cnt > 0)
 
 -- | Convert hpc coverage entries into a line based coverage format
 toLix :: Int                   -- ^ Source line count

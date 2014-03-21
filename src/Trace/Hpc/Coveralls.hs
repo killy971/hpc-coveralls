@@ -30,15 +30,13 @@ mixDir = hpcDir ++ "mix/"
 
 lixToSimpleCoverage :: Lix -> SimpleCoverage
 lixToSimpleCoverage = map conv
-    where conv Full = Number 2
+    where conv Full    = Number 2
           conv Partial = Number 1
-          conv None = Number 0
+          conv None    = Number 0
           conv Irrelevant = Null
 
 toSimpleCoverage :: Int -> [(MixEntry, Integer)] -> SimpleCoverage
-toSimpleCoverage lineCount mixEntryTixs = simpleCoverage
-    where simpleCoverage = lixToSimpleCoverage lix
-          lix = toLix lineCount mixEntryTixs
+toSimpleCoverage lineCount = lixToSimpleCoverage . toLix lineCount
 
 coverageToJson :: CoverageData -> Value
 coverageToJson (source, mix, tix) = object [
@@ -55,8 +53,7 @@ toCoverallsJson :: String -> String -> [CoverageData] -> Value
 toCoverallsJson serviceName jobId coverageData = object [
     "service_job_id" .= jobId,
     "service_name" .= serviceName,
-    "source_files" .= resultList]
-    where resultList = map coverageToJson coverageData
+    "source_files" .= map coverageToJson coverageData]
 
 toCoverageData :: String -> Tix -> IO [CoverageData]
 toCoverageData name (Tix tixs) = do
@@ -78,5 +75,5 @@ generateCoverallsFromTix serviceName jobId name = do
         Nothing -> error $ "Couldn't find the file " ++ tixPath
         Just tixs -> do
             coverageDatas <- toCoverageData name tixs
-            return (toCoverallsJson serviceName jobId coverageDatas)
+            return $ toCoverallsJson serviceName jobId coverageDatas
     where tixPath = tixDir ++ name ++ "/" ++ getTixFileName name
