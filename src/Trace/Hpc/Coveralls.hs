@@ -64,11 +64,11 @@ toCoverageData name (Tix tixs) = do
           mixPath = mixDir ++ name ++ "/"
           readSource (Mix filePath _ _ _ _) = readFile filePath
 
--- |
-generateCoverallsFromTix :: String -- ^
-                         -> String -- ^
-                         -> String -- ^
-                         -> IO Value
+-- | Generate coveralls json formatted code coverage from hpc coverage data
+generateCoverallsFromTix :: String   -- ^ CI name
+                         -> String   -- ^ CI Job ID
+                         -> String   -- ^ test suite name
+                         -> IO Value -- ^ code coverage result in json format
 generateCoverallsFromTix serviceName jobId name = do
     mtix <- readTix tixPath
     case mtix of

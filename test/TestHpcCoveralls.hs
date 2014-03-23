@@ -1,3 +1,6 @@
+{-# OPTIONS_GHC -fno-warn-missing-signatures #-}
+{-# OPTIONS_GHC -fno-warn-type-defaults #-}
+
 module TestHpcCoveralls where
 
 import Data.Aeson
@@ -6,6 +9,5 @@ import Test.HUnit
 import Trace.Hpc.Coveralls
 import Trace.Hpc.Lix
 
-testHpcCoveralls :: Test
 testHpcCoveralls = "Coveralls" ~: [
     lixToSimpleCoverage [Irrelevant] ~=? [Null]]
