@@ -57,3 +57,7 @@ hpc-coveralls is still under development and any contributions are welcome!
 # Notes
 
 - HPC publication: http://ittc.ku.edu/~andygill/papers/Hpc07.pdf
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/guillaume-nargeot/hpc-coveralls/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
