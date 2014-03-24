@@ -6,7 +6,7 @@ import Prelude hiding (getLine)
 import Trace.Hpc.Mix
 import Trace.Hpc.Util
 
-data Hit = Full | Partial | None | Irrelevant deriving (Show)
+data Hit = Full | Partial | None | Irrelevant deriving (Eq, Show)
 
 type Lix = [Hit]
 
