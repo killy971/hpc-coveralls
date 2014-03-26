@@ -1,11 +1,11 @@
 name:                hpc-coveralls
-version:             0.1.0.0
+version:             0.1.0
 synopsis:            Coveralls.io support for Haskell.
 description:         Send Haskell code coverage to coveralls.io
 license:             BSD3
 license-file:        LICENSE
 author:              Guillaume Nargeot
-maintainer:          guillaume@nargeot.com
+maintainer:          Guillaume Nargeot <guillaume+hackage@nargeot.com>
 copyright:           (c) Guillaume Nargeot 2014
 category:            Control
 build-type:          Simple
@@ -20,12 +20,12 @@ source-repository head
 executable hpc-coveralls
   hs-source-dirs:      src
   main-is:             Main.hs
-  build-depends:       aeson, base < 5, bytestring, hpc
+  build-depends:       aeson, base < 5, bytestring, curl, hpc
   ghc-options:         -Wall -Werror
 
 test-suite test-all
   hs-source-dirs:      src, test
   type:                exitcode-stdio-1.0
   main-is:             TestAll.hs
-  build-depends:       aeson, base < 5, bytestring, hpc, HUnit, Cabal >= 1.9.2
+  build-depends:       aeson, base < 5, bytestring, curl, hpc, HUnit, Cabal >= 1.9.2
   ghc-options:         -Wall -Werror
