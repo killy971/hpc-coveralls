@@ -17,7 +17,6 @@ before_install:
   - git clone https://github.com/guillaume-nargeot/hpc-coveralls.git
   - cd hpc-coveralls
   - cabal install
-  - chmod +x run-cabal-test.sh hpc-coveralls.sh
 script:
   - cabal configure --enable-tests --enable-library-coverage && cabal build
   - hpc-coveralls/run-cabal-test.sh
