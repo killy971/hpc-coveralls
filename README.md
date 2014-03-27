@@ -19,7 +19,7 @@ before_install:
   - cabal install
 script:
   - cabal configure --enable-tests --enable-library-coverage && cabal build
-  - hpc-coveralls/run-cabal-test.sh
+  - hpc-coveralls/run-cabal-test.sh [optional-cabal-test-arguments]
 after_script:
   - hpc-coveralls/hpc-coveralls.sh [your-test-suite-name]
 ```
@@ -49,10 +49,11 @@ This convention is the same as the one used by [cloverage](https://github.com/ls
 
 There's an [open issue](https://github.com/lemurheavy/coveralls-public/issues/216) to improve this.
 
-# Dependencies
+# Package dependencies
 
-- Haskell packages: `hpc` (obviously) and `aeson` to output the json coverage report
-- `curl`: used to send the coverage data to coveralls.io
+- `hpc` (obviously)
+- `aeson`: to format the code coverage report as json
+- `curl`: to send the coverage report to coveralls.io
 
 # Contributing
 

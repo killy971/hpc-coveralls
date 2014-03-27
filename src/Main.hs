@@ -10,7 +10,6 @@ import qualified Data.ByteString.Lazy.Char8 as BSL
 writeJson :: String -> Value -> IO ()
 writeJson filePath = BSL.writeFile filePath . encode
 
-
 main :: IO ()
 main = do
     args <- getArgs

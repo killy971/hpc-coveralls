@@ -1,5 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+-- |
+-- Module:      Trace.Hpc.Coveralls
+-- Copyright:   (c) 2014 Guillaume Nargeot
+-- License:     BSD3
+-- Maintainer:  Guillaume Nargeot <guillaume+hackage@nargeot.com>
+-- Stability:   experimental
+--
+-- Types and functions for converting and sending hpc output to coveralls.io.
+
 module Trace.Hpc.Coveralls where
 
 import Data.Aeson

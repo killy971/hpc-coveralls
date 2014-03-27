@@ -1,3 +1,13 @@
+-- |
+-- Module:      Trace.Hpc.Lix
+-- Copyright:   (c) 2014 Guillaume Nargeot
+-- License:     BSD3
+-- Maintainer:  Guillaume Nargeot <guillaume+hackage@nargeot.com>
+-- Stability:   experimental
+-- Portability: portable
+--
+-- Types and functions for converting hpc output to line-based code coverage data.
+
 module Trace.Hpc.Lix where
 
 import Data.List
