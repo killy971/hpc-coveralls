@@ -13,7 +13,7 @@ getServiceAndJobID = do
     case lookup "TRAVIS" env of
         Just _ -> do
             jobId <- getEnv "TRAVIS_JOB_ID"
-            return ("travisci", jobId)
+            return ("travis-ci", jobId)
         _ -> error "Unsupported CI service."
 
 writeJson :: String -> Value -> IO ()
