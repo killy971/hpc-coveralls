@@ -21,7 +21,7 @@ script:
   - cabal configure --enable-tests --enable-library-coverage && cabal build
   - hpc-coveralls/run-cabal-test.sh [optional-cabal-test-arguments]
 after_script:
-  - hpc-coveralls/hpc-coveralls.sh [your-test-suite-name]
+  - hpc-coveralls [your-test-suite-name]
 ```
 
 Note that the usual `cabal test` command is replaced by the script `run-cabal-test.sh`.

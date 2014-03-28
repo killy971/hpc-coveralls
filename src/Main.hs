@@ -3,9 +3,18 @@ module Main where
 import Data.Aeson
 import Trace.Hpc.Coveralls
 import Trace.Hpc.Coveralls.Curl
-import System.Environment (getArgs)
+import System.Environment (getArgs, getEnv, getEnvironment)
 import System.Exit (exitSuccess)
 import qualified Data.ByteString.Lazy.Char8 as BSL
+
+getServiceAndJobID :: IO (String, String)
+getServiceAndJobID = do
+    env <- getEnvironment
+    case lookup "TRAVIS" env of
+        Just _ -> do
+            jobId <- getEnv "TRAVIS_JOB_ID"
+            return ("travisci", jobId)
+        _ -> error "Unsupported CI service."
 
 writeJson :: String -> Value -> IO ()
 writeJson filePath = BSL.writeFile filePath . encode
@@ -16,12 +25,13 @@ main = do
     case args of
         ["--help"] -> usage >> exitSuccess
         ["-h"] -> usage >> exitSuccess
-        [serviceName, jobId, path] -> do
-            coverallsJson <- generateCoverallsFromTix serviceName jobId path
+        [testName] -> do
+            (serviceName, jobId) <- getServiceAndJobID
+            coverallsJson <- generateCoverallsFromTix serviceName jobId testName
+            let filePath = serviceName ++ "-" ++ jobId ++ ".json"
             writeJson filePath coverallsJson
             response <- postJson filePath "https://coveralls.io/api/v1/jobs"
             putStrLn response >> exitSuccess
-                where filePath = serviceName ++ "-" ++ jobId ++ ".json"
         _ -> usage >> exitSuccess
     where
-        usage = putStrLn "Usage: cabal run hpc-coveralls [serviceName] [jobId] [path]"
+        usage = putStrLn "Usage: cabal run hpc-coveralls [testName]"

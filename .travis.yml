@@ -7,4 +7,4 @@ script:
   - hlint . --ignore="Parse error"
   - cabal configure --enable-tests
   - cabal build
-  - cabal test
+  - cabal test --show-details=always
