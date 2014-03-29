@@ -17,6 +17,13 @@ source-repository head
   type: git
   location: https://github.com/guillaume-nargeot/hpc-coveralls.git
 
+library
+  hs-source-dirs:      src
+  exposed-modules:     Trace.Hpc.Coveralls,
+                       Trace.Hpc.Coveralls.Curl,
+                       Trace.Hpc.Lix
+  build-depends:       aeson, base < 5, bytestring, curl, hpc
+
 executable hpc-coveralls
   hs-source-dirs:      src
   main-is:             HpcCoverallsMain.hs
