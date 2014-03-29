@@ -24,16 +24,16 @@ after_script:
   - hpc-coveralls [your-test-suite-name]
 ```
 
-Note that the usual `cabal test` command is replaced by the script `run-cabal-test.sh`.
+Note that the usual `cabal test` command is replaced by the command `run-cabal-test`.
 The reason for this is explained in the next section.
 
 For an example usage, please refer to [this-project](https://github.com/guillaume-nargeot/project-euler-haskell) ([result on coveralls](https://coveralls.io/r/guillaume-nargeot/project-euler-haskell)).
 
-## The run-cabal-test.sh script
+## The run-cabal-test command
 
 When using hpc 0.6, `cabal test` outputs an error message and exits with the error code `1`, which results in a build failure.
 
-In order to prevent this from happening, hpc-coveralls provides the `run-cabal-test.sh` script which runs `cabal test` and returns with `0` if the regex `^Test suite .*: FAIL$` never matches any line of the output.
+In order to prevent this from happening, hpc-coveralls provides the `run-cabal-test` command which runs `cabal test` and returns with `0` if the regex `^Test suite .*: FAIL$` never matches any line of the output.
 You can adapt this script for your needs, which may differ based on the testing framework you use.
 
 The hpc issue should be fixed in version 0.7, which is provided by GHC 7.8 (Travis CI currently only provides GHC 7.6).
