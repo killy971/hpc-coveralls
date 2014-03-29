@@ -19,8 +19,14 @@ source-repository head
 
 executable hpc-coveralls
   hs-source-dirs:      src
-  main-is:             Main.hs
+  main-is:             HpcCoverallsMain.hs
   build-depends:       aeson, base < 5, bytestring, curl, hpc
+  ghc-options:         -Wall -Werror
+
+executable run-cabal-test
+  hs-source-dirs:      src
+  main-is:             RunCabalTestMain.hs
+  build-depends:       base < 5, process, regex-posix
   ghc-options:         -Wall -Werror
 
 test-suite test-all

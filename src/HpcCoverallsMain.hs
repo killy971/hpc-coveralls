@@ -34,4 +34,4 @@ main = do
             putStrLn response >> exitSuccess
         _ -> usage >> exitSuccess
     where
-        usage = putStrLn "Usage: cabal run hpc-coveralls [testName]"
+        usage = putStrLn "Usage: hpc-coveralls [testName]"

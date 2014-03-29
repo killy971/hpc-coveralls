@@ -19,7 +19,7 @@ before_install:
   - cabal install
 script:
   - cabal configure --enable-tests --enable-library-coverage && cabal build
-  - hpc-coveralls/run-cabal-test.sh [optional-cabal-test-arguments]
+  - run-cabal-test [optional-cabal-test-arguments]
 after_script:
   - hpc-coveralls [your-test-suite-name]
 ```
