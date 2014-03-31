@@ -9,7 +9,7 @@
 --
 -- Types and functions for converting and sending hpc output to coveralls.io.
 
-module Trace.Hpc.Coveralls where
+module Trace.Hpc.Coveralls ( generateCoverallsFromTix ) where
 
 import Data.Aeson
 import Data.Aeson.Types ()
