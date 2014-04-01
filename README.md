@@ -14,9 +14,7 @@ hpc-coveralls is still under development and any contributions are welcome!
 Commands to add to your project `.travis.yml`:
 ```yaml
 before_install:
-  - git clone https://github.com/guillaume-nargeot/hpc-coveralls.git
-  - cd hpc-coveralls
-  - cabal install
+  - cabal install hpc-coveralls
 script:
   - cabal configure --enable-tests --enable-library-coverage && cabal build
   - run-cabal-test [optional-cabal-test-arguments]
@@ -24,19 +22,18 @@ after_script:
   - hpc-coveralls [your-test-suite-name]
 ```
 
-Note that the usual `cabal test` command is replaced by the command `run-cabal-test`.
+Note that the usual `cabal test` command is replaced by `run-cabal-test`.
 The reason for this is explained in the next section.
 
-For an example usage, please refer to [this-project](https://github.com/guillaume-nargeot/project-euler-haskell) ([result on coveralls](https://coveralls.io/r/guillaume-nargeot/project-euler-haskell)).
+For an example usage, please refer to [this-project](https://github.com/guillaume-nargeot/project-euler-haskell) `.travis.yml` file ([result on coveralls](https://coveralls.io/r/guillaume-nargeot/project-euler-haskell)).
 
 ## The run-cabal-test command
 
 When using hpc 0.6, `cabal test` outputs an error message and exits with the error code `1`, which results in a build failure.
 
 In order to prevent this from happening, hpc-coveralls provides the `run-cabal-test` command which runs `cabal test` and returns with `0` if the regex `^Test suite .*: FAIL$` never matches any line of the output.
-You can adapt this script for your needs, which may differ based on the testing framework you use.
 
-The hpc issue should be fixed in version 0.7, which is provided by GHC 7.8 (Travis CI currently only provides GHC 7.6).
+This hpc issue should be fixed in version 0.7 (not yet available on Travis CI).
 
 # Limitations
 
@@ -49,15 +46,11 @@ This convention is the same as the one used by [cloverage](https://github.com/ls
 
 There's an [open issue](https://github.com/lemurheavy/coveralls-public/issues/216) to improve this.
 
-# Package dependencies
-
-- `hpc` (obviously)
-- `aeson`: to format the code coverage report as json
-- `curl`: to send the coverage report to coveralls.io
-
 # Contributing
 
 hpc-coveralls is still under development and any contributions are welcome!
+
+[Future Plans and Ideas](https://github.com/guillaume-nargeot/hpc-coveralls/wiki/Future-Plans-and-Ideas)
 
 # License
 
