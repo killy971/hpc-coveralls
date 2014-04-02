@@ -59,7 +59,3 @@ BSD3 ([tl;dr](https://tldrlegal.com/license/bsd-3-clause-license-(revised)))
 # Notes
 
 - HPC publication: http://ittc.ku.edu/~andygill/papers/Hpc07.pdf
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/guillaume-nargeot/hpc-coveralls/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
