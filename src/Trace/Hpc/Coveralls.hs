@@ -70,7 +70,11 @@ toCoverageData name (Tix tixs) = do
     sources <- mapM readSource mixs
     return $ zip3 sources mixs tixs
     where readMix' tix = readMix [mixPath] (Right tix)
-          mixPath = mixDir ++ name ++ "/"
+              where mixPath = mixDir ++ dirName ++ "/"
+                    dirName = case span (/= '/') modName of
+                       (_, []) -> name
+                       (packageId, _) -> packageId
+                    TixModule modName _ _ _ = tix
           readSource (Mix filePath _ _ _ _) = readFile filePath
 
 -- | Generate coveralls json formatted code coverage from hpc coverage data
