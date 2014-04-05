@@ -1,20 +1,28 @@
 module Main where
 
 import Data.Aeson
-import Trace.Hpc.Coveralls
-import Trace.Hpc.Coveralls.Curl
+import Data.List
+import Data.Maybe
+import qualified Data.ByteString.Lazy.Char8 as BSL
 import System.Environment (getArgs, getEnv, getEnvironment)
 import System.Exit (exitSuccess)
-import qualified Data.ByteString.Lazy.Char8 as BSL
+import Trace.Hpc.Coveralls
+import Trace.Hpc.Coveralls.Curl
 
 getServiceAndJobID :: IO (String, String)
 getServiceAndJobID = do
     env <- getEnvironment
-    case lookup "TRAVIS" env of
-        Just _ -> do
-            jobId <- getEnv "TRAVIS_JOB_ID"
-            return ("travis-ci", jobId)
+    case fmap snd $ find (isJust . flip lookup env . fst) ciEnvVars of
+        Just (ciName, jobIdVarName) -> do
+            jobId <- getEnv jobIdVarName
+            return (ciName, jobId)
         _ -> error "Unsupported CI service."
+    where ciEnvVars = [
+           ("TRAVIS",      ("travis-ci", "TRAVIS_JOB_ID")),
+           ("CIRCLECI",    ("circleci",  "CIRCLE_BUILD_NUM")),
+           ("SEMAPHORE",   ("semaphore", "REVISION")),
+           ("JENKINS_URL", ("jenkins",   "BUILD_ID")),
+           ("CI_NAME",     ("codeship",  "CI_BUILD_NUMBER"))]
 
 writeJson :: String -> Value -> IO ()
 writeJson filePath = BSL.writeFile filePath . encode
