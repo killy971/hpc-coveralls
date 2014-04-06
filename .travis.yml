@@ -10,6 +10,7 @@ before_install:
 script:
   - hlint . --ignore="Parse error"
   - cabal configure --enable-tests --enable-library-coverage
+  - cabal build
   - cabal install
   - run-cabal-test --show-details=always
 
