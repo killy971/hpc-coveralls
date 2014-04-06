@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -fno-warn-unused-do-bind #-}
 
 -- |
@@ -9,22 +10,39 @@
 --
 -- Functions for sending coverage report files over http.
 
-module Trace.Hpc.Coveralls.Curl (postJson) where
+module Trace.Hpc.Coveralls.Curl ( postJson, PostResult (..) ) where
 
+import Data.Aeson
+import Data.Aeson.Types (parseMaybe)
+import qualified Data.ByteString.Lazy.Char8 as LBS
+import Data.Maybe
 import Network.Curl
+
+-- | Result to the POST request to coveralls.io
+data PostResult =
+    PostSuccess URLString -- ^ Coveralls job url
+  | PostFailure String    -- ^ error message
+
+parseResponse :: CurlResponse -> PostResult
+parseResponse r = case respCurlCode r of
+    CurlOK -> PostSuccess $ getField "url"
+    _      -> PostFailure $ getField "message"
+    where getField fieldName = fromJust $ mGetField fieldName
+          mGetField fieldName = do
+              result <- decode $ LBS.pack (respBody r)
+              parseMaybe (.: fieldName) result
 
 httpPost :: String -> [HttpPost]
 httpPost path = [HttpPost "json_file" Nothing (ContentFile path) [] Nothing]
 
-showResponse :: CurlResponse -> String
-showResponse r = show (respCurlCode r) ++ show (respBody r)
-
 -- | Send file content over HTTP using POST request
-postJson :: String -> URLString -> IO String
+postJson :: String        -- ^ target file
+         -> URLString     -- ^ target url
+         -> IO PostResult -- ^ POST request result
 postJson path url = do
     h <- initialize
     setopt h (CurlVerbose True)
     setopt h (CurlURL url)
     setopt h (CurlHttpPost $ httpPost path)
     r <- perform_with_response_ h
-    return $ showResponse r
+    return $ parseResponse r

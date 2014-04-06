@@ -72,8 +72,8 @@ toCoverageData name (Tix tixs) = do
     where readMix' tix = readMix [mixPath] (Right tix)
               where mixPath = mixDir ++ dirName ++ "/"
                     dirName = case span (/= '/') modName of
-                       (_, []) -> name
-                       (packageId, _) -> packageId
+                        (_, []) -> name
+                        (packageId, _) -> packageId
                     TixModule modName _ _ _ = tix
           readSource (Mix filePath _ _ _ _) = readFile filePath
 

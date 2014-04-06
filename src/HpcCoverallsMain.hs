@@ -5,9 +5,12 @@ import Data.List
 import Data.Maybe
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import System.Environment (getArgs, getEnv, getEnvironment)
-import System.Exit (exitSuccess)
+import System.Exit (exitFailure, exitSuccess)
 import Trace.Hpc.Coveralls
 import Trace.Hpc.Coveralls.Curl
+
+urlApiV1 :: String
+urlApiV1 = "https://coveralls.io/api/v1/jobs"
 
 getServiceAndJobID :: IO (String, String)
 getServiceAndJobID = do
@@ -38,8 +41,10 @@ main = do
             coverallsJson <- generateCoverallsFromTix serviceName jobId testName
             let filePath = serviceName ++ "-" ++ jobId ++ ".json"
             writeJson filePath coverallsJson
-            response <- postJson filePath "https://coveralls.io/api/v1/jobs"
-            putStrLn response >> exitSuccess
+            response <- postJson filePath urlApiV1
+            case response of
+                PostSuccess url -> putStrLn ("URL: " ++ url) >> exitSuccess
+                PostFailure msg -> putStrLn ("Error: " ++ msg) >> exitFailure
         _ -> usage >> exitSuccess
     where
         usage = putStrLn "Usage: hpc-coveralls [testName]"

@@ -5,12 +5,9 @@ description:
   This utility converts and sends Haskell projects hpc code coverage to
   <http://coveralls.io/ coverall.io>.
   .
-  At the moment, only <http://travis-ci.org Travis CI> is supported, but other
-  CI services will be supported soon.
-  .
   /Usage/
   .
-  Commands to add to your project .travis.yml:
+  Commands to add to your project .travis.yml when using Travis CI:
   .
   > before_install:
   >   - cabal install hpc-coveralls

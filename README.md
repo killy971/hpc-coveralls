@@ -3,7 +3,7 @@ hpc-coveralls [![Build Status](https://travis-ci.org/guillaume-nargeot/hpc-cover
 
 hpc-coveralls converts and sends Haskell projects hpc code coverage to [coverall.io](http://coveralls.io/).
 
-At the moment, only [Travis CI](http://travis-ci.org) is supported, but other CI services will be supported soon.
+At the moment, only [Travis CI](http://travis-ci.org) has been test, but hpc-coveralls should be compatible with other CI services (Check HpcCoverallsMain [source](https://github.com/guillaume-nargeot/hpc-coveralls/blob/master/src/HpcCoverallsMain.hs) for the list).
 
 hpc-coveralls is still under development and any contributions are welcome!
 
