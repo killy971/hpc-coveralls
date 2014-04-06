@@ -5,6 +5,9 @@ before_install:
 
 script:
   - hlint . --ignore="Parse error"
-  - cabal configure --enable-tests
-  - cabal build
-  - cabal test --show-details=always
+  - cabal configure --enable-tests --enable-library-coverage
+  - cabal install
+  - run-cabal-test --show-details=always
+
+after_script:
+  - hpc-coveralls test-all
