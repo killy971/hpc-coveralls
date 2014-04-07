@@ -13,6 +13,7 @@ module Trace.Hpc.Coveralls ( generateCoverallsFromTix ) where
 
 import Data.Aeson
 import Data.Aeson.Types ()
+import System.Exit (exitFailure)
 import Trace.Hpc.Lix
 import Trace.Hpc.Mix
 import Trace.Hpc.Tix
@@ -85,7 +86,7 @@ generateCoverallsFromTix :: String   -- ^ CI name
 generateCoverallsFromTix serviceName jobId name = do
     mtix <- readTix tixPath
     case mtix of
-        Nothing -> error $ "Couldn't find the file " ++ tixPath
+        Nothing -> error ("Couldn't find the file " ++ tixPath) >> exitFailure
         Just tixs -> do
             coverageDatas <- toCoverageData name tixs
             return $ toCoverallsJson serviceName jobId coverageDatas
