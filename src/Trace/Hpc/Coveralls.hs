@@ -71,24 +71,26 @@ toCoverallsJson serviceName jobId coverageData = object [
 matchAny :: [String] -> String -> Bool
 matchAny patterns fileName = any (fileName =~) $ map ("^" ++) patterns
 
+readMix' :: String -> TixModule -> IO Mix
+readMix' name tix = readMix [mixPath] (Right tix)
+    where mixPath = mixDir ++ dirName ++ "/"
+          dirName = case span (/= '/') modName of
+              (_, []) -> name
+              (packageId, _) -> packageId
+          TixModule modName _ _ _ = tix
+
 -- | Create a list of coverage data from the tix input
 toCoverageData :: String            -- ^ test suite name
                -> Tix               -- ^ tix data
                -> [String]          -- ^ excluded source folders
                -> IO [CoverageData] -- ^ coverage data list
 toCoverageData testSuiteName (Tix tixs) excludeDirPatterns = do
-    mixs <- mapM readMix' tixs
+    mixs <- mapM (readMix' testSuiteName) tixs
     let files = map filePath mixs
     sources <- mapM readFile files
     let coverageDataList = zip4 files sources mixs tixs
     return $ filter sourceDirFilter coverageDataList
-    where readMix' tix = readMix [mixPath] (Right tix)
-              where mixPath = mixDir ++ dirName ++ "/"
-                    dirName = case span (/= '/') modName of
-                        (_, []) -> testSuiteName
-                        (packageId, _) -> packageId
-                    TixModule modName _ _ _ = tix
-          filePath (Mix fp _ _ _ _) = fp
+    where filePath (Mix fp _ _ _ _) = fp
           sourceDirFilter = not . matchAny excludeDirPatterns . fst4
           fst4 (x, _, _, _) = x
 
