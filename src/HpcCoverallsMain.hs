@@ -1,12 +1,15 @@
 module Main where
 
 import Data.Aeson
+import qualified Data.ByteString.Lazy.Char8 as BSL
 import Data.List
 import Data.Maybe
-import qualified Data.ByteString.Lazy.Char8 as BSL
-import System.Environment (getArgs, getEnv, getEnvironment)
+import HpcCoverallsMainCmdLine
+import System.Console.CmdArgs
+import System.Environment (getEnv, getEnvironment)
 import System.Exit (exitFailure, exitSuccess)
 import Trace.Hpc.Coveralls
+import Trace.Hpc.Coveralls.Config
 import Trace.Hpc.Coveralls.Curl
 
 urlApiV1 :: String
@@ -30,21 +33,24 @@ getServiceAndJobID = do
 writeJson :: String -> Value -> IO ()
 writeJson filePath = BSL.writeFile filePath . encode
 
+toConfig :: HpcCoverallsArgs -> Maybe Config
+toConfig hca = case testSuites hca of
+    [testSuite] -> case excludeDirs hca of
+        Nothing   -> Just $ Config [testSuite] []
+        Just dirs -> Just $ Config [testSuite] dirs
+    _ -> Nothing
+
 main :: IO ()
 main = do
-    args <- getArgs
-    case args of
-        ["--help"] -> usage >> exitSuccess
-        ["-h"] -> usage >> exitSuccess
-        [testName] -> do
+    hca <- cmdArgs hpcCoverallsArgs
+    case toConfig hca of
+        Nothing -> putStrLn "Please specify a target test suite name" >> exitSuccess
+        Just config -> do
             (serviceName, jobId) <- getServiceAndJobID
-            coverallsJson <- generateCoverallsFromTix serviceName jobId testName
+            coverallsJson <- generateCoverallsFromTix serviceName jobId config
             let filePath = serviceName ++ "-" ++ jobId ++ ".json"
             writeJson filePath coverallsJson
             response <- postJson filePath urlApiV1
             case response of
                 PostSuccess url -> putStrLn ("URL: " ++ url) >> exitSuccess
                 PostFailure msg -> putStrLn ("Error: " ++ msg) >> exitFailure
-        _ -> usage >> exitSuccess
-    where
-        usage = putStrLn "Usage: hpc-coveralls [testName]"

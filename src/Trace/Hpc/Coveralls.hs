@@ -13,12 +13,16 @@ module Trace.Hpc.Coveralls ( generateCoverallsFromTix ) where
 
 import Data.Aeson
 import Data.Aeson.Types ()
+import Data.List
 import System.Exit (exitFailure)
+import Text.Regex.Posix
+import Trace.Hpc.Coveralls.Config
 import Trace.Hpc.Lix
 import Trace.Hpc.Mix
 import Trace.Hpc.Tix
 
 type CoverageData = (
+    String,    -- source file path
     String,    -- file source code
     Mix,       -- module index data
     TixModule) -- tixs recorded by hpc
@@ -49,15 +53,14 @@ toSimpleCoverage :: Int -> [(MixEntry, Integer)] -> SimpleCoverage
 toSimpleCoverage lineCount = lixToSimpleCoverage . toLix lineCount
 
 coverageToJson :: CoverageData -> Value
-coverageToJson (source, mix, tix) = object [
-    "name" .= getFilePath mix,
+coverageToJson (filePath, source, mix, tix) = object [
+    "name" .= filePath,
     "source" .= source,
     "coverage" .= coverage]
     where coverage = toSimpleCoverage lineCount mixEntryTixs
           lineCount = length $ lines source
           mixEntryTixs = zip (getMixEntries mix) (tixModuleTixs tix)
           getMixEntries (Mix _ _ _ _ mixEntries) = mixEntries
-          getFilePath (Mix filePath _ _ _ _) = filePath
 
 toCoverallsJson :: String -> String -> [CoverageData] -> Value
 toCoverallsJson serviceName jobId coverageData = object [
@@ -65,29 +68,41 @@ toCoverallsJson serviceName jobId coverageData = object [
     "service_name" .= serviceName,
     "source_files" .= map coverageToJson coverageData]
 
-toCoverageData :: String -> Tix -> IO [CoverageData]
-toCoverageData name (Tix tixs) = do
+matchAny :: [String] -> String -> Bool
+matchAny patterns fileName = any (fileName =~) $ map ("^" ++) patterns
+
+-- | Create a list of coverage data from the tix input
+toCoverageData :: String            -- ^ test suite name
+               -> Tix               -- ^ tix data
+               -> [String]          -- ^ excluded source folders
+               -> IO [CoverageData] -- ^ coverage data list
+toCoverageData testSuiteName (Tix tixs) excludeDirPatterns = do
     mixs <- mapM readMix' tixs
-    sources <- mapM readSource mixs
-    return $ zip3 sources mixs tixs
+    let files = map filePath mixs
+    sources <- mapM readFile files
+    let coverageDataList = zip4 files sources mixs tixs
+    return $ filter sourceDirFilter coverageDataList
     where readMix' tix = readMix [mixPath] (Right tix)
               where mixPath = mixDir ++ dirName ++ "/"
                     dirName = case span (/= '/') modName of
-                        (_, []) -> name
+                        (_, []) -> testSuiteName
                         (packageId, _) -> packageId
                     TixModule modName _ _ _ = tix
-          readSource (Mix filePath _ _ _ _) = readFile filePath
+          filePath (Mix fp _ _ _ _) = fp
+          sourceDirFilter = not . matchAny excludeDirPatterns . fst4
+          fst4 (x, _, _, _) = x
 
 -- | Generate coveralls json formatted code coverage from hpc coverage data
 generateCoverallsFromTix :: String   -- ^ CI name
                          -> String   -- ^ CI Job ID
-                         -> String   -- ^ test suite name
+                         -> Config   -- ^ hpc-coveralls configuration
                          -> IO Value -- ^ code coverage result in json format
-generateCoverallsFromTix serviceName jobId name = do
+generateCoverallsFromTix serviceName jobId config = do
     mtix <- readTix tixPath
     case mtix of
         Nothing -> error ("Couldn't find the file " ++ tixPath) >> exitFailure
         Just tixs -> do
-            coverageDatas <- toCoverageData name tixs
+            coverageDatas <- toCoverageData testSuiteName tixs (excludedDirs config)
             return $ toCoverallsJson serviceName jobId coverageDatas
-    where tixPath = tixDir ++ name ++ "/" ++ getTixFileName name
+    where tixPath = tixDir ++ testSuiteName ++ "/" ++ getTixFileName testSuiteName
+          testSuiteName = head (testSuiteNames config) -- multiple test suite mode is supported at the moment
