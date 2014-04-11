@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 
-module HpcCoverallsMainCmdLine where
+module HpcCoverallsCmdLine where
 
 import Data.List
 import Data.Version (Version(..))

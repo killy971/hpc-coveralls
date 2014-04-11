@@ -4,7 +4,7 @@ import Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import Data.List
 import Data.Maybe
-import HpcCoverallsMainCmdLine
+import HpcCoverallsCmdLine
 import System.Console.CmdArgs
 import System.Environment (getEnv, getEnvironment)
 import System.Exit (exitFailure, exitSuccess)

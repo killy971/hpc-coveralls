@@ -92,8 +92,10 @@ executable run-cabal-test
   main-is:        RunCabalTestMain.hs
   build-depends:
     base < 5,
+    cmdargs >= 0.10,
     process,
-    regex-posix
+    regex-posix,
+    split
   ghc-options:    -Wall -fwarn-tabs
 
 test-suite test-all
