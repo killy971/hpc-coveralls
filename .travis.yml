@@ -13,6 +13,8 @@ script:
   - cabal build
   - cabal install
   - run-cabal-test --show-details=always
+  - cabal check
+  - cabal sdist
 
 after_script:
   - hpc-coveralls test-all
