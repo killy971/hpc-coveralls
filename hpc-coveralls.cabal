@@ -92,7 +92,6 @@ executable run-cabal-test
   main-is:        RunCabalTestMain.hs
   build-depends:
     base < 5,
-    cmdargs >= 0.10,
     process,
     regex-posix,
     split
