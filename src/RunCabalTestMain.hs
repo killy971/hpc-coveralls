@@ -30,8 +30,8 @@ runCabalTest :: String -> [String] -> IO Bool
 runCabalTest cabalName args = do
     (_, out, err, _) <- runInteractiveCommand (cabalName ++ " test " ++ unwords args)
     outResult <- liftM (not . any isTestFailure) (readLines out)
-    errResult <- liftM null (readLines err)
-    return $ outResult && errResult
+    _ <- readLines err
+    return outResult
 
 getCabalName :: [String] -> Maybe String
 getCabalName [] = Just defaultCabalName
