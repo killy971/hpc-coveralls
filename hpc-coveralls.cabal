@@ -71,7 +71,8 @@ library
     base < 5,
     bytestring >= 0.10,
     curl >= 1.3.8,
-    hpc >= 0.6.0.0
+    hpc >= 0.6.0.0,
+    regex-posix
 
 executable hpc-coveralls
   hs-source-dirs: src
@@ -80,8 +81,10 @@ executable hpc-coveralls
     aeson,
     base < 5,
     bytestring >= 0.10,
+    cmdargs >= 0.10,
     curl >= 1.3.8,
-    hpc >= 0.6.0.0
+    hpc >= 0.6.0.0,
+    regex-posix
   ghc-options:   -Wall -fwarn-tabs
 
 executable run-cabal-test
@@ -90,7 +93,8 @@ executable run-cabal-test
   build-depends:
     base < 5,
     process,
-    regex-posix
+    regex-posix,
+    split
   ghc-options:    -Wall -fwarn-tabs
 
 test-suite test-all

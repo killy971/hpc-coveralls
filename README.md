@@ -19,7 +19,7 @@ script:
   - cabal configure --enable-tests --enable-library-coverage && cabal build
   - run-cabal-test [optional-cabal-test-arguments]
 after_script:
-  - hpc-coveralls [your-test-suite-name]
+  - hpc-coveralls [options] [test-suite-name]
 ```
 
 Note that the usual `cabal test` command is replaced by `run-cabal-test`.
@@ -34,6 +34,19 @@ When using hpc 0.6, `cabal test` outputs an error message and exits with the err
 In order to prevent this from happening, hpc-coveralls provides the `run-cabal-test` command which runs `cabal test` and returns with `0` if the regex `^Test suite .*: FAIL$` never matches any line of the output.
 
 This hpc issue should be fixed in version 0.7 (not yet available on Travis CI).
+
+## The hpc-coveralls command
+
+At the moment, you can specify only one suite.
+
+### Options
+
+The `--exclude-dir` option can be used to exclude a given source file directory.<br/>
+You can exclude source files located under the `test/` folder from the coverage report by using this option as in the following example:
+
+```yaml
+hpc-coveralls --exclude-dir=test
+```
 
 # Limitations
 
