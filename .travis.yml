@@ -24,7 +24,7 @@ script:
   - cabal-1.18 build
   - |
     if [ $GHCVER = "7.8.1" ]; then
-      cabal-1.18 --show-details=always
+      cabal-1.18 test --show-details=always
     else
       dist/build/run-cabal-test/run-cabal-test --cabal-name=cabal-1.18 --show-details=always
     fi
