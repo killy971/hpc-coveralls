@@ -4,6 +4,10 @@ env:
   - GHCVER=7.6.3
   - GHCVER=7.8.1
 
+matrix:
+  allow_failures:
+     - env: GHCVER=7.2.2
+
 before_install:
   - travis_retry sudo add-apt-repository -y ppa:hvr/ghc
   - travis_retry sudo apt-get update
@@ -19,6 +23,7 @@ script:
   - hlint . --ignore="Parse error"
   - cabal-1.18 configure --enable-tests --enable-benchmarks --enable-library-coverage -v2
   - cabal-1.18 build
+  - cabal-1.18 install
   - run-cabal-test --cabal-name=cabal-1.18 --show-details=always
   - cabal-1.18 check
   - cabal-1.18 sdist
