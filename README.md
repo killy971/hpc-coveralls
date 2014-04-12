@@ -45,7 +45,7 @@ The `--exclude-dir` option can be used to exclude a given source file directory.
 You can exclude source files located under the `test/` folder from the coverage report by using this option as in the following example:
 
 ```yaml
-hpc-coveralls --exclude-dir=test
+hpc-coveralls --exclude-dir=test [test-suite-name]
 ```
 
 # Limitations

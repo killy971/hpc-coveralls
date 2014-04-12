@@ -1,5 +1,6 @@
 module Main where
 
+import Control.Monad
 import Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import Data.List
@@ -49,6 +50,7 @@ main = do
             (serviceName, jobId) <- getServiceAndJobID
             coverallsJson <- generateCoverallsFromTix serviceName jobId config
             let filePath = serviceName ++ "-" ++ jobId ++ ".json"
+            when (displayReport hca) $ BSL.putStrLn $ encode coverallsJson
             writeJson filePath coverallsJson
             response <- postJson filePath urlApiV1
             case response of
