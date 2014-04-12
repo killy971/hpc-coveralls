@@ -17,19 +17,18 @@ before_install:
 install:
   - cabal-1.18 update
   - travis_retry sudo apt-get -q -y install hlint || cabal-1.18 install hlint
-  - cabal-1.18 install --enable-tests --enable-benchmarks
+  - cabal-1.18 install --only-dependencies --enable-tests --enable-benchmarks
 
 script:
   - hlint . --ignore="Parse error"
   - cabal-1.18 configure --enable-tests --enable-benchmarks --enable-library-coverage -v2
   - cabal-1.18 build
-  - cabal-1.18 install
-  - run-cabal-test --cabal-name=cabal-1.18 --show-details=always
+  - dist/build/run-cabal-test/run-cabal-test --cabal-name=cabal-1.18 --show-details=always
   - cabal-1.18 check
   - cabal-1.18 sdist
 
 after_script:
-  - hpc-coveralls test-all
+  - dist/build/hpc-coveralls/hpc-coveralls test-all
 
 notifications:
   webhooks:
