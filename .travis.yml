@@ -22,7 +22,12 @@ script:
   - hlint . --ignore="Parse error"
   - cabal-1.18 configure --enable-tests --enable-benchmarks --enable-library-coverage -v2
   - cabal-1.18 build
-  - dist/build/run-cabal-test/run-cabal-test --cabal-name=cabal-1.18 --show-details=always
+  - |
+    if [ $GHCVER = "7.8.1" ]; then
+      cabal-1.18 --show-details=always
+    else
+      dist/build/run-cabal-test/run-cabal-test --cabal-name=cabal-1.18 --show-details=always
+    fi
   - cabal-1.18 check
   - cabal-1.18 sdist
 
