@@ -5,7 +5,7 @@ env:
 
 matrix:
   allow_failures:
-     - env: GHCVER=7.8.1
+    - env: GHCVER=7.8.1
 
 before_install:
   - travis_retry sudo add-apt-repository -y ppa:hvr/ghc
