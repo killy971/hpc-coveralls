@@ -1,5 +1,5 @@
 name:           hpc-coveralls
-version:        0.2.0
+version:        0.2.1
 synopsis:       Coveralls.io support for Haskell.
 description:
   This utility converts and sends Haskell projects hpc code coverage to
@@ -32,6 +32,10 @@ tested-with:    GHC == 7.6.3
 bug-reports:    https://github.com/guillaume-nargeot/hpc-coveralls
 homepage:       https://github.com/guillaume-nargeot/hpc-coveralls/issues
 
+extra-source-files:
+  README.md,
+  CHANGELOG.md
+
 source-repository head
   type: git
   location: https://github.com/guillaume-nargeot/hpc-coveralls.git
@@ -39,13 +43,16 @@ source-repository head
 library
   hs-source-dirs:      src
   exposed-modules:
+    HpcCoverallsCmdLine,
     Trace.Hpc.Coveralls,
+    Trace.Hpc.Coveralls.Config,
     Trace.Hpc.Coveralls.Curl,
     Trace.Hpc.Lix
   build-depends:
     aeson,
     base < 5,
     bytestring >= 0.10,
+    cmdargs >= 0.10,
     curl >= 1.3.8,
     hpc >= 0.6.0.0,
     regex-posix
