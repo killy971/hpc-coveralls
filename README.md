@@ -3,7 +3,7 @@ hpc-coveralls [![Build Status](https://travis-ci.org/guillaume-nargeot/hpc-cover
 
 hpc-coveralls converts and sends Haskell projects hpc code coverage to [coverall.io](http://coveralls.io/).
 
-At the moment, only [Travis CI](http://travis-ci.org) has been test, but hpc-coveralls should be compatible with other CI services (Check HpcCoverallsMain [source](https://github.com/guillaume-nargeot/hpc-coveralls/blob/master/src/HpcCoverallsMain.hs) for the list).
+At the moment, only [Travis CI](http://travis-ci.org) has been tested, but hpc-coveralls should be compatible with other CI services (Check `HpcCoverallsMain` [source](https://github.com/guillaume-nargeot/hpc-coveralls/blob/master/src/HpcCoverallsMain.hs) for the list).
 
 hpc-coveralls is still under development and any contributions are welcome!
 
@@ -17,7 +17,7 @@ before_install:
   - cabal install hpc-coveralls
 script:
   - cabal configure --enable-tests --enable-library-coverage && cabal build
-  - run-cabal-test [optional-cabal-test-arguments]
+  - run-cabal-test [options] [cabal-test-options]
 after_script:
   - hpc-coveralls [options] [test-suite-name]
 ```
@@ -35,14 +35,23 @@ In order to prevent this from happening, hpc-coveralls provides the `run-cabal-t
 
 This hpc issue should be fixed in version 0.7 (not yet available on Travis CI).
 
+### Options
+
+The `--cabal-name` option can be used to specify a custom executable name instead of the default `cabal` when calling `cabal test`.<br/>
+Below is an example which can be useful for projects with a Travis configuration based on [multi-ghc-travis](https://github.com/hvr/multi-ghc-travis):
+
+```yaml
+run-cabal-test --cabal-name=cabal-1.18
+```
+
 ## The hpc-coveralls command
 
 At the moment, you can specify only one suite.
 
 ### Options
 
-The `--exclude-dir` option can be used to exclude a given source file directory.<br/>
-You can exclude source files located under the `test/` folder from the coverage report by using this option as in the following example:
+The `--exclude-dir` option can be used to exclude source files located under a given directory from the coverage report.<br/>
+You can exclude source files located under the `test/` by using this option as in the following example:
 
 ```yaml
 hpc-coveralls --exclude-dir=test [test-suite-name]
