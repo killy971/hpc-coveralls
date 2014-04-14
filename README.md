@@ -46,7 +46,11 @@ run-cabal-test --cabal-name=cabal-1.18
 
 ## The hpc-coveralls command
 
-At the moment, you can specify only one suite.
+At the moment, you can specify only one suite. For example, if your test suite is named `test-all`, use the command as follows:
+
+```yaml
+hpc-coveralls test-all
+```
 
 ### Options
 

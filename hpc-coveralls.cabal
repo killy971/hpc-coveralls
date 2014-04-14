@@ -13,35 +13,11 @@ description:
   >   - cabal install hpc-coveralls
   > script:
   >   - cabal configure --enable-tests --enable-library-coverage && cabal build
-  >   - run-cabal-test [optional-cabal-test-arguments]
+  >   - run-cabal-test [options] [cabal-test-options]
   > after_script:
-  >   - hpc-coveralls [your-test-suite-name]
+  >   - hpc-coveralls [options] [test-suite-name]
   .
-  /The run-cabal-test command/
-  .
-  When using hpc 0.6, 'cabal test' outputs an error message and exits with the
-  error code 1, which results in a build failure.
-  .
-  In order to prevent this from happening, hpc-coveralls provides the
-  'run-cabal-test' command which runs 'cabal test' and returns with 0 if the
-  regex '^Test suite .*: FAIL$' never matches any line of the output.
-  .
-  This hpc issue should be fixed in version 0.7, which is provided by GHC 7.8
-  (Travis CI currently only provides GHC 7.6).
-  .
-  /Limitations/
-  .
-  As Coveralls doesn't support yet partial-line coverage, the following
-  convention is used to represent line coverage with line hit counts:
-  .
-  * 0 : the line is never hit,
-  .
-  * 1 : the line is partially covered,
-  .
-  * 2 : the line is fully covered.
-  .
-  Further information can be found in the
-  <https://github.com/guillaume-nargeot/hpc-coveralls README>.
+  Further information can be found in the <https://github.com/guillaume-nargeot/hpc-coveralls README>.
 
 license:        BSD3
 license-file:   LICENSE
