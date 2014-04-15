@@ -1,4 +1,4 @@
-[0.2.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=2&state=closed)
+[0.2.1](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=2&state=closed)
 -----
 * Additional CI services support (issue #1)
 * Fixed an issue in which mix files could not be found, @maoe contribution (issue #5)
