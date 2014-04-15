@@ -81,14 +81,11 @@ executable run-cabal-test
   ghc-options:    -Wall -fwarn-tabs
 
 test-suite test-all
-  hs-source-dirs: src, test
+  hs-source-dirs: test
   type:           exitcode-stdio-1.0
   main-is:        TestAll.hs
   build-depends:
-    aeson,
     base,
-    bytestring,
-    curl,
-    hpc,
+    hpc-coveralls,
     HUnit
   ghc-options:    -Wall
