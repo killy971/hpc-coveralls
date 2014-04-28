@@ -61,6 +61,12 @@ You can exclude source files located under the `test/` by using this option as i
 hpc-coveralls --exclude-dir=test [test-suite-name]
 ```
 
+You can specify multiple excluded folders by using the following example syntax:
+
+```yaml
+hpc-coveralls --exclude-dir=test1 --exclude-dir=test2 [test-suite-name]
+```
+
 # Limitations
 
 As Coveralls doesn't support yet partial-line coverage, the following convention is used to represent line coverage with line hit counts:
