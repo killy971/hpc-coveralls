@@ -74,6 +74,7 @@ executable run-cabal-test
   hs-source-dirs: src
   main-is:        RunCabalTestMain.hs
   build-depends:
+    async >= 2.0.0.0,
     base < 5,
     process,
     regex-posix,

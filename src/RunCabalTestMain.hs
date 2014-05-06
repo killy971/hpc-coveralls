@@ -1,9 +1,11 @@
 module Main where
 
+import Control.Concurrent.Async (Async, async, waitBoth)
 import Control.Monad
 import Data.List
 import Data.List.Split
 import GHC.IO.Handle
+import System.IO (hPutStrLn, stdout, stderr)
 import System.Exit (exitFailure, exitSuccess)
 import System.Environment (getArgs)
 import System.Process
@@ -15,23 +17,27 @@ defaultCabalName = "cabal"
 isTestFailure :: String -> Bool
 isTestFailure line = line =~ "^Test suite .*: FAIL$"
 
-readLines :: Handle -> IO [String]
-readLines h = do
-    isEOF <- hIsEOF h
+readLines :: Handle -> Handle -> IO [String]
+readLines hIn hOut = do
+    isEOF <- hIsEOF hIn
     if isEOF
         then return []
         else do
-            x <- hGetLine h
-            putStrLn x
-            xs <- readLines h
+            x <- hGetLine hIn
+            hPutStrLn hOut x
+            xs <- readLines hIn hOut
             return (x : xs)
+
+checkFailure :: Handle -> Handle -> IO (Async Bool)
+checkFailure hIn = async . liftM (not . any isTestFailure) . readLines hIn
 
 runCabalTest :: String -> [String] -> IO Bool
 runCabalTest cabalName args = do
     (_, out, err, _) <- runInteractiveCommand (cabalName ++ " test " ++ unwords args)
-    outResult <- liftM (not . any isTestFailure) (readLines out)
-    _ <- readLines err
-    return outResult
+    aOutResult <- checkFailure out stdout
+    aErrResult <- checkFailure err stderr
+    results <- waitBoth aOutResult aErrResult
+    return $ uncurry (&&) results
 
 getCabalName :: [String] -> Maybe String
 getCabalName [] = Just defaultCabalName
