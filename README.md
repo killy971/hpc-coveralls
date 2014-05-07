@@ -11,7 +11,17 @@ hpc-coveralls is still under development and any contributions are welcome!
 
 ## Travis CI
 
-Commands to add to your project `.travis.yml`:
+Commands to add to your project `.travis.yml` when using GHC 7.8:
+```yaml
+before_install:
+  - cabal install hpc-coveralls
+script:
+  - cabal configure --enable-tests --enable-library-coverage && cabal build && cabal test
+after_script:
+  - hpc-coveralls [options] [test-suite-name]
+```
+
+:warning: When using a GHC version prior to 7.8, you have to replace the `cabal test` command by `run-cabal-test`, as in the following example:
 ```yaml
 before_install:
   - cabal install hpc-coveralls
@@ -22,10 +32,10 @@ after_script:
   - hpc-coveralls [options] [test-suite-name]
 ```
 
-Note that the usual `cabal test` command is replaced by `run-cabal-test`.
 The reason for this is explained in the next section.
 
-For an example usage, please refer to [this-project](https://github.com/guillaume-nargeot/project-euler-haskell) `.travis.yml` file ([result on coveralls](https://coveralls.io/r/guillaume-nargeot/project-euler-haskell)).
+For a real world example usage, please refer to [this-project](https://github.com/guillaume-nargeot/project-euler-haskell) `.travis.yml` file ([result on coveralls](https://coveralls.io/r/guillaume-nargeot/project-euler-haskell)).
+You can also refer to the `.travis.yml` file of hpc-coveralls itself, which is configured with [multi-ghc-travis](https://github.com/hvr/multi-ghc-travis).
 
 ## The run-cabal-test command
 
@@ -33,7 +43,7 @@ When using hpc 0.6, `cabal test` outputs an error message and exits with the err
 
 In order to prevent this from happening, hpc-coveralls provides the `run-cabal-test` command which runs `cabal test` and returns with `0` if the regex `^Test suite .*: FAIL$` never matches any line of the output.
 
-This hpc issue should be fixed in version 0.7 (not yet available on Travis CI).
+As this issue is fixed in the hpc version shipped with GHC 7.8, you don't have to use `run-cabal-test` when testing with GHC 7.8 and can safely use `cabal test`.
 
 ### Options
 
