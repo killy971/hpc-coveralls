@@ -1,3 +1,8 @@
+[0.2.2](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=3&state=closed)
+* Prevent double compilation (issue #11)
+* Concurrently process cabal test stdout and stderr channels (issue #12)
+* Test with GHC 7.8.2
+
 [0.2.1](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=2&state=closed)
 -----
 * Additional CI services support (issue #1)
