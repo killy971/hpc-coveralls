@@ -21,7 +21,7 @@ after_script:
   - hpc-coveralls [options] [test-suite-name]
 ```
 
-:warning: When using a GHC version prior to 7.8, you have to replace the `cabal test` command by `run-cabal-test`, as in the following example:
+When using a GHC version prior to 7.8, you have to replace the `cabal test` command by `run-cabal-test`, as in the following example:
 ```yaml
 before_install:
   - cabal install hpc-coveralls

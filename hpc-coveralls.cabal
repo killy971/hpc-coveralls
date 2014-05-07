@@ -12,8 +12,7 @@ description:
   > before_install:
   >   - cabal install hpc-coveralls
   > script:
-  >   - cabal configure --enable-tests --enable-library-coverage && cabal build
-  >   - run-cabal-test [options] [cabal-test-options]
+  >   - cabal configure --enable-tests --enable-library-coverage && cabal build && cabal test
   > after_script:
   >   - hpc-coveralls [options] [test-suite-name]
   .
