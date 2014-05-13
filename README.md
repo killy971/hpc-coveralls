@@ -1,4 +1,4 @@
-hpc-coveralls [![Build Status](https://travis-ci.org/guillaume-nargeot/hpc-coveralls.png?branch=master)](https://travis-ci.org/guillaume-nargeot/hpc-coveralls)
+hpc-coveralls [![Build Status](https://travis-ci.org/guillaume-nargeot/hpc-coveralls.png?branch=master)](https://travis-ci.org/guillaume-nargeot/hpc-coveralls) [![Gitter chat](https://badges.gitter.im/guillaume-nargeot/hpc-coveralls.png)](https://gitter.im/guillaume-nargeot/hpc-coveralls)
 =============
 
 hpc-coveralls converts and sends Haskell projects hpc code coverage to [coverall.io](http://coveralls.io/).
