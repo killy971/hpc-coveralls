@@ -18,23 +18,11 @@ import qualified Data.Map as M
 import System.Exit (exitFailure)
 import Text.Regex.Posix
 import Trace.Hpc.Coveralls.Config
+import Trace.Hpc.Coveralls.Types
 import Trace.Hpc.Lix
 import Trace.Hpc.Mix
 import Trace.Hpc.Paths
 import Trace.Hpc.Tix
-
-type ModuleCoverageData = (
-    String,    -- file source code
-    Mix,       -- module index data
-    TixModule) -- tixs recorded by hpc
-
-type TestSuiteCoverageData = M.Map FilePath ModuleCoverageData
-
--- single file coverage data in the format defined by coveralls.io
-type SimpleCoverage = [CoverageEntry]
-
--- Is there a way to restrict this to only Number and Null?
-type CoverageEntry = Value
 
 lixToSimpleCoverage :: Lix -> SimpleCoverage
 lixToSimpleCoverage = map conv
