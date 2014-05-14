@@ -20,6 +20,7 @@ import Text.Regex.Posix
 import Trace.Hpc.Coveralls.Config
 import Trace.Hpc.Lix
 import Trace.Hpc.Mix
+import Trace.Hpc.Paths
 import Trace.Hpc.Tix
 
 type ModuleCoverageData = (
@@ -34,15 +35,6 @@ type SimpleCoverage = [CoverageEntry]
 
 -- Is there a way to restrict this to only Number and Null?
 type CoverageEntry = Value
-
-hpcDir :: FilePath
-hpcDir = "dist/hpc/"
-
-tixDir :: FilePath
-tixDir = hpcDir ++ "tix/"
-
-mixDir :: FilePath
-mixDir = hpcDir ++ "mix/"
 
 lixToSimpleCoverage :: Lix -> SimpleCoverage
 lixToSimpleCoverage = map conv
