@@ -46,6 +46,7 @@ library
     Trace.Hpc.Coveralls,
     Trace.Hpc.Coveralls.Config,
     Trace.Hpc.Coveralls.Curl,
+    Trace.Hpc.Coveralls.Paths,
     Trace.Hpc.Lix
   build-depends:
     aeson,
