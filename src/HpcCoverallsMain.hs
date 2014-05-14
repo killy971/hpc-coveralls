@@ -10,7 +10,7 @@ import System.Console.CmdArgs
 import System.Environment (getEnv, getEnvironment)
 import System.Exit (exitFailure, exitSuccess)
 import Trace.Hpc.Coveralls
-import Trace.Hpc.Coveralls.Config
+import Trace.Hpc.Coveralls.Config (Config(Config))
 import Trace.Hpc.Coveralls.Curl
 
 urlApiV1 :: String
