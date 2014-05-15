@@ -1,3 +1,8 @@
+[0.3.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=4&state=closed)
+-----
+* Support setting multiple test suites (issue #14)
+* Process --exclude-dir value as a string prefix instead of a regex (issue #16)
+
 [0.2.2](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=3&state=closed)
 -----
 * Prevent double compilation (issue #11)
