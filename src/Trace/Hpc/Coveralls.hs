@@ -14,7 +14,7 @@ module Trace.Hpc.Coveralls ( generateCoverallsFromTix ) where
 import Data.Aeson
 import Data.Aeson.Types ()
 import Data.List
-import qualified Data.Map as M
+import qualified Data.Map.Strict as M
 import System.Exit (exitFailure)
 import Text.Regex.Posix
 import Trace.Hpc.Coveralls.Config
