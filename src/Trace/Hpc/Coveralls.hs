@@ -16,7 +16,6 @@ import Data.Aeson.Types ()
 import Data.List
 import qualified Data.Map.Strict as M
 import System.Exit (exitFailure)
-import Text.Regex.Posix
 import Trace.Hpc.Coveralls.Config
 import Trace.Hpc.Coveralls.Types
 import Trace.Hpc.Lix
@@ -52,7 +51,7 @@ toCoverallsJson serviceName jobId testSuiteCoverageData = object [
     where toJsonCoverageList = map (uncurry coverageToJson) . M.toList
 
 matchAny :: [String] -> String -> Bool
-matchAny patterns fileName = any (fileName =~) $ map ("^" ++) patterns
+matchAny patterns fileName = any (`isPrefixOf` fileName) patterns
 
 getMixPath :: String -> String -> FilePath
 getMixPath testSuiteName modName = mixDir ++ dirName ++ "/"
