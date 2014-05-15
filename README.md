@@ -1,4 +1,4 @@
-hpc-coveralls [![Build Status](https://travis-ci.org/guillaume-nargeot/hpc-coveralls.png?branch=master)](https://travis-ci.org/guillaume-nargeot/hpc-coveralls) [![Gitter chat](http://img.shields.io/badge/gitter-chat--room-brightgreen.svg)](https://gitter.im/guillaume-nargeot/hpc-coveralls) [![BSD3 License](https://tldrlegal.com/license/bsd-3-clause-license-%28revised%29)](http://img.shields.io/badge/license-BSD3-brightgreen.svg)
+hpc-coveralls [![Build Status](https://travis-ci.org/guillaume-nargeot/hpc-coveralls.png?branch=master)](https://travis-ci.org/guillaume-nargeot/hpc-coveralls) [![Gitter chat](http://img.shields.io/badge/gitter-chat--room-brightgreen.svg)](https://gitter.im/guillaume-nargeot/hpc-coveralls) [![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)](https://tldrlegal.com/license/bsd-3-clause-license-%28revised%29)
 =============
 
 hpc-coveralls converts and sends Haskell projects hpc code coverage to [coverall.io](http://coveralls.io/).
