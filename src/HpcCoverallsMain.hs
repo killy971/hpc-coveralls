@@ -10,7 +10,7 @@ import System.Console.CmdArgs
 import System.Environment (getEnv, getEnvironment)
 import System.Exit (exitFailure, exitSuccess)
 import Trace.Hpc.Coveralls
-import Trace.Hpc.Coveralls.Config
+import Trace.Hpc.Coveralls.Config (Config(Config))
 import Trace.Hpc.Coveralls.Curl
 
 urlApiV1 :: String
@@ -36,8 +36,8 @@ writeJson filePath = BSL.writeFile filePath . encode
 
 toConfig :: HpcCoverallsArgs -> Maybe Config
 toConfig hca = case testSuites hca of
-    [testSuite] -> Just $ Config [testSuite] (excludeDirs hca)
-    _           -> Nothing
+    []             -> Nothing
+    testSuiteNames -> Just $ Config testSuiteNames (excludeDirs hca)
 
 main :: IO ()
 main = do

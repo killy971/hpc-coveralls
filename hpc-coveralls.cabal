@@ -46,11 +46,14 @@ library
     Trace.Hpc.Coveralls,
     Trace.Hpc.Coveralls.Config,
     Trace.Hpc.Coveralls.Curl,
+    Trace.Hpc.Coveralls.Types,
+    Trace.Hpc.Paths,
     Trace.Hpc.Lix
   build-depends:
     aeson,
     base < 5,
     bytestring >= 0.10,
+    containers >= 0.5,
     cmdargs >= 0.10,
     curl >= 1.3.8,
     hpc >= 0.6.0.0,
@@ -63,6 +66,7 @@ executable hpc-coveralls
     aeson,
     base < 5,
     bytestring >= 0.10,
+    containers >= 0.5,
     cmdargs >= 0.10,
     curl >= 1.3.8,
     hpc >= 0.6.0.0,
