@@ -35,13 +35,13 @@ toSimpleCoverage :: Int -> [(MixEntry, Integer)] -> SimpleCoverage
 toSimpleCoverage lineCount = lixToSimpleCoverage . toLix lineCount
 
 coverageToJson :: FilePath -> ModuleCoverageData -> Value
-coverageToJson filePath (source, mix, tix) = object [
+coverageToJson filePath (source, mix, tixs) = object [
     "name" .= filePath,
     "source" .= source,
     "coverage" .= coverage]
     where coverage = toSimpleCoverage lineCount mixEntryTixs
           lineCount = length $ lines source
-          mixEntryTixs = zip (getMixEntries mix) (tixModuleTixs tix)
+          mixEntryTixs = zip (getMixEntries mix) tixs
           getMixEntries (Mix _ _ _ _ mixEntries) = mixEntries
 
 toCoverallsJson :: String -> String -> TestSuiteCoverageData -> Value
@@ -60,8 +60,12 @@ getMixPath testSuiteName modName = mixDir ++ dirName ++ "/"
               (_, []) -> testSuiteName
               (packageId, _) -> packageId
 
+mergeModuleCoverageData :: ModuleCoverageData -> ModuleCoverageData -> ModuleCoverageData
+mergeModuleCoverageData (source, mix, tixs1) (_, _, tixs2) =
+    (source, mix, zipWith (+) tixs1 tixs2)
+
 mergeCoverageData :: [TestSuiteCoverageData] -> TestSuiteCoverageData
-mergeCoverageData = head -- for the moment just use the first item
+mergeCoverageData = foldr1 (M.unionWith mergeModuleCoverageData)
 
 readMix' :: String -> TixModule -> IO Mix
 readMix' name tix = readMix [mixPath] (Right tix)
@@ -84,7 +88,7 @@ readCoverageData testSuiteName excludeDirPatterns = do
             mixs <- mapM (readMix' testSuiteName) tixs
             let files = map filePath mixs
             sources <- mapM readFile files
-            let coverageDataList = zip4 files sources mixs tixs
+            let coverageDataList = zip4 files sources mixs (map tixModuleTixs tixs)
             let filteredCoverageDataList = filter sourceDirFilter coverageDataList
             return $ M.fromList $ map toFirstAndRest filteredCoverageDataList
             where filePath (Mix fp _ _ _ _) = fp

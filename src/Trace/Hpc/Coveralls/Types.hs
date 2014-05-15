@@ -12,12 +12,11 @@ module Trace.Hpc.Coveralls.Types where
 import Data.Aeson.Types (Value)
 import qualified Data.Map as M
 import Trace.Hpc.Mix
-import Trace.Hpc.Tix
 
 type ModuleCoverageData = (
     String,    -- file source code
     Mix,       -- module index data
-    TixModule) -- tixs recorded by hpc
+    [Integer]) -- tixs recorded by hpc
 
 type TestSuiteCoverageData = M.Map FilePath ModuleCoverageData
 
