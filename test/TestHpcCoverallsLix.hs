@@ -1,10 +1,10 @@
 {-# OPTIONS_GHC -fno-warn-missing-signatures #-}
 {-# OPTIONS_GHC -fno-warn-type-defaults #-}
 
-module TestHpcLix where
+module TestHpcCoverallsLix where
 
 import Test.HUnit
-import Trace.Hpc.Lix
+import Trace.Hpc.Coveralls.Lix
 
 testGroupByIndex = "groupByIndex" ~: [
     groupByIndex 0 [(0, 2)] @?= [],

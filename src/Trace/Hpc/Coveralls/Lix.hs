@@ -1,5 +1,5 @@
 -- |
--- Module:      Trace.Hpc.Lix
+-- Module:      Trace.Hpc.Coveralls.Lix
 -- Copyright:   (c) 2014 Guillaume Nargeot
 -- License:     BSD3
 -- Maintainer:  Guillaume Nargeot <guillaume+hackage@nargeot.com>
@@ -8,7 +8,7 @@
 --
 -- Types and functions for converting hpc output to line-based code coverage data.
 
-module Trace.Hpc.Lix where
+module Trace.Hpc.Coveralls.Lix where
 
 import Data.List
 import Data.Ord

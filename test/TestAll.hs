@@ -2,7 +2,7 @@ module Main where
 
 import System.Exit ( exitFailure, exitSuccess )
 import Test.HUnit
-import TestHpcLix
+import TestHpcCoverallsLix
 
 allTests :: [Test]
 allTests = [testHpcLix]

@@ -5,7 +5,7 @@
 -- Maintainer:  Guillaume Nargeot <guillaume+hackage@nargeot.com>
 -- Stability:   experimental
 --
--- Types to represent code coverage data hpc.
+-- Types to represent hpc code coverage data.
 
 module Trace.Hpc.Coveralls.Types where
 

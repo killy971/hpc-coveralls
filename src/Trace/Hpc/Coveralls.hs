@@ -17,10 +17,10 @@ import Data.List
 import qualified Data.Map.Strict as M
 import System.Exit (exitFailure)
 import Trace.Hpc.Coveralls.Config
+import Trace.Hpc.Coveralls.Lix
+import Trace.Hpc.Coveralls.Paths
 import Trace.Hpc.Coveralls.Types
-import Trace.Hpc.Lix
 import Trace.Hpc.Mix
-import Trace.Hpc.Paths
 import Trace.Hpc.Tix
 
 lixToSimpleCoverage :: Lix -> SimpleCoverage
