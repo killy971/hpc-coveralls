@@ -5,5 +5,5 @@ import Trace.Hpc.Coveralls.Types (CoverageMode)
 data Config = Config {
     testSuites   :: [String],
     excludedDirs :: [FilePath],
-    mode         :: CoverageMode
+    coverageMode :: CoverageMode
     }
