@@ -69,7 +69,7 @@ executable hpc-coveralls
     cmdargs >= 0.10,
     curl >= 1.3.8,
     hpc >= 0.6.0.0
-  ghc-options:   -Wall -fwarn-tabs
+  ghc-options:    -Wall -fwarn-tabs -fwarn-incomplete-uni-patterns
 
 executable run-cabal-test
   hs-source-dirs: src
@@ -80,7 +80,7 @@ executable run-cabal-test
     process,
     regex-posix,
     split
-  ghc-options:    -Wall -fwarn-tabs
+  ghc-options:    -Wall -fwarn-tabs -fwarn-incomplete-uni-patterns
 
 test-suite test-all
   hs-source-dirs: test
