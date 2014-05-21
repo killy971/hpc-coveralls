@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveDataTypeable, StandaloneDeriving #-}
+
 -- |
 -- Module:      Trace.Hpc.Coveralls.Types
 -- Copyright:   (c) 2014 Guillaume Nargeot
@@ -9,9 +11,12 @@
 
 module Trace.Hpc.Coveralls.Types where
 
-import Data.Aeson.Types (Value)
+import           Data.Aeson.Types (Value)
+import           Data.Data
 import qualified Data.Map as M
-import Trace.Hpc.Mix
+import           Network.Curl
+import           System.Console.CmdArgs.Default
+import           Trace.Hpc.Mix
 
 type ModuleCoverageData = (
     String,    -- file source code
@@ -26,3 +31,22 @@ type SimpleCoverage = [CoverageEntry]
 -- Is there a way to restrict this to only Number and Null?
 type CoverageEntry = Value
 
+data Hit = Full
+         | Partial
+         | None
+         | Irrelevant
+    deriving (Eq, Show)
+
+type Lix = [Hit]
+
+instance Default Mode where
+    def = PartialAllowed
+
+data Mode = StrictFullLine
+          | PartialAllowed
+    deriving (Data, Eq, Show, Typeable)
+
+-- | Result to the POST request to coveralls.io
+data PostResult =
+    PostSuccess URLString -- ^ Coveralls job url
+  | PostFailure String    -- ^ error message

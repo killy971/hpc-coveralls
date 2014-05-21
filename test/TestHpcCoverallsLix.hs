@@ -5,6 +5,7 @@ module TestHpcCoverallsLix where
 
 import Test.HUnit
 import Trace.Hpc.Coveralls.Lix
+import Trace.Hpc.Coveralls.Types
 
 testGroupByIndex = "groupByIndex" ~: [
     groupByIndex 0 [(0, 2)] @?= [],

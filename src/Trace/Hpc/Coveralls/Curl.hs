@@ -12,16 +12,12 @@
 
 module Trace.Hpc.Coveralls.Curl ( postJson, PostResult (..) ) where
 
-import Data.Aeson
-import Data.Aeson.Types (parseMaybe)
+import           Data.Aeson
+import           Data.Aeson.Types (parseMaybe)
 import qualified Data.ByteString.Lazy.Char8 as LBS
-import Data.Maybe
-import Network.Curl
-
--- | Result to the POST request to coveralls.io
-data PostResult =
-    PostSuccess URLString -- ^ Coveralls job url
-  | PostFailure String    -- ^ error message
+import           Data.Maybe
+import           Network.Curl
+import           Trace.Hpc.Coveralls.Types
 
 parseResponse :: CurlResponse -> PostResult
 parseResponse r = case respCurlCode r of

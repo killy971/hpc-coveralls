@@ -12,6 +12,7 @@ import System.Exit (exitFailure, exitSuccess)
 import Trace.Hpc.Coveralls
 import Trace.Hpc.Coveralls.Config (Config(Config))
 import Trace.Hpc.Coveralls.Curl
+import Trace.Hpc.Coveralls.Types
 
 urlApiV1 :: String
 urlApiV1 = "https://coveralls.io/api/v1/jobs"
@@ -37,7 +38,7 @@ writeJson filePath = BSL.writeFile filePath . encode
 toConfig :: HpcCoverallsArgs -> Maybe Config
 toConfig hca = case testSuites hca of
     []             -> Nothing
-    testSuiteNames -> Just $ Config testSuiteNames (excludeDirs hca)
+    testSuiteNames -> Just $ Config testSuiteNames (excludeDirs hca) PartialAllowed
 
 main :: IO ()
 main = do

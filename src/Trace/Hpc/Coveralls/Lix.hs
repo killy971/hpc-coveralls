@@ -6,19 +6,16 @@
 -- Stability:   experimental
 -- Portability: portable
 --
--- Types and functions for converting hpc output to line-based code coverage data.
+-- Functions for converting hpc output to line-based code coverage data.
 
 module Trace.Hpc.Coveralls.Lix where
 
 import Data.List
 import Data.Ord
 import Prelude hiding (getLine)
+import Trace.Hpc.Coveralls.Types
 import Trace.Hpc.Mix
 import Trace.Hpc.Util
-
-data Hit = Full | Partial | None | Irrelevant deriving (Eq, Show)
-
-type Lix = [Hit]
 
 groupByIndex :: Int -> [(Int, a)] -> [[a]]
 groupByIndex size = take size . flip (++) (repeat []) . groupByIndex' 0 []

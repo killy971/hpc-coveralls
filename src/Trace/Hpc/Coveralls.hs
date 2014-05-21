@@ -7,21 +7,21 @@
 -- Maintainer:  Guillaume Nargeot <guillaume+hackage@nargeot.com>
 -- Stability:   experimental
 --
--- Types and functions for converting and sending hpc output to coveralls.io.
+-- Functions for converting and sending hpc output to coveralls.io.
 
 module Trace.Hpc.Coveralls ( generateCoverallsFromTix ) where
 
-import Data.Aeson
-import Data.Aeson.Types ()
-import Data.List
+import           Data.Aeson
+import           Data.Aeson.Types ()
+import           Data.List
 import qualified Data.Map.Strict as M
-import System.Exit (exitFailure)
-import Trace.Hpc.Coveralls.Config
-import Trace.Hpc.Coveralls.Lix
-import Trace.Hpc.Coveralls.Paths
-import Trace.Hpc.Coveralls.Types
-import Trace.Hpc.Mix
-import Trace.Hpc.Tix
+import           System.Exit (exitFailure)
+import           Trace.Hpc.Coveralls.Config
+import           Trace.Hpc.Coveralls.Lix
+import           Trace.Hpc.Coveralls.Paths
+import           Trace.Hpc.Coveralls.Types
+import           Trace.Hpc.Mix
+import           Trace.Hpc.Tix
 
 lixToSimpleCoverage :: Lix -> SimpleCoverage
 lixToSimpleCoverage = map conv
