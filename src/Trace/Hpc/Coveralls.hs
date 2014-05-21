@@ -23,32 +23,36 @@ import           Trace.Hpc.Coveralls.Types
 import           Trace.Hpc.Mix
 import           Trace.Hpc.Tix
 
-lixToSimpleCoverage :: Lix -> SimpleCoverage
-lixToSimpleCoverage = map conv
-    where conv Full    = Number 2
-          conv Partial = Number 1
+lixToSimpleCoverage :: CoverageMode -> Lix -> SimpleCoverage
+lixToSimpleCoverage mode = map conv
+    where conv Full    = case mode of
+              StrictlyFullLines -> Number 1
+              AllowPartialLines -> Number 2
+          conv Partial = case mode of
+              StrictlyFullLines -> Number 1
+              AllowPartialLines -> Number 0
           conv None    = Number 0
           conv Irrelevant = Null
 
-toSimpleCoverage :: Int -> [(MixEntry, Integer)] -> SimpleCoverage
-toSimpleCoverage lineCount = lixToSimpleCoverage . toLix lineCount
+toSimpleCoverage :: CoverageMode -> Int -> [(MixEntry, Integer)] -> SimpleCoverage
+toSimpleCoverage mode lineCount = lixToSimpleCoverage mode . toLix lineCount
 
-coverageToJson :: FilePath -> ModuleCoverageData -> Value
-coverageToJson filePath (source, mix, tixs) = object [
+coverageToJson :: CoverageMode -> FilePath -> ModuleCoverageData -> Value
+coverageToJson mode filePath (source, mix, tixs) = object [
     "name" .= filePath,
     "source" .= source,
     "coverage" .= coverage]
-    where coverage = toSimpleCoverage lineCount mixEntryTixs
+    where coverage = toSimpleCoverage mode lineCount mixEntryTixs
           lineCount = length $ lines source
           mixEntryTixs = zip (getMixEntries mix) tixs
           getMixEntries (Mix _ _ _ _ mixEntries) = mixEntries
 
-toCoverallsJson :: String -> String -> TestSuiteCoverageData -> Value
-toCoverallsJson serviceName jobId testSuiteCoverageData = object [
+toCoverallsJson :: String -> String -> CoverageMode -> TestSuiteCoverageData -> Value
+toCoverallsJson serviceName jobId mode testSuiteCoverageData = object [
     "service_job_id" .= jobId,
     "service_name" .= serviceName,
     "source_files" .= toJsonCoverageList testSuiteCoverageData]
-    where toJsonCoverageList = map (uncurry coverageToJson) . M.toList
+    where toJsonCoverageList = map (uncurry $ coverageToJson mode) . M.toList
 
 matchAny :: [String] -> String -> Bool
 matchAny patterns fileName = any (`isPrefixOf` fileName) patterns
@@ -102,6 +106,7 @@ generateCoverallsFromTix :: String   -- ^ CI name
                          -> IO Value -- ^ code coverage result in json format
 generateCoverallsFromTix serviceName jobId config = do
     testSuitesCoverages <- mapM (`readCoverageData` excludedDirPatterns) testSuiteNames
-    return $ toCoverallsJson serviceName jobId $ mergeCoverageData testSuitesCoverages
+    return $ toCoverallsJson serviceName jobId mode $ mergeCoverageData testSuitesCoverages
     where excludedDirPatterns = excludedDirs config
           testSuiteNames = testSuites config
+          mode = coverageMode config
