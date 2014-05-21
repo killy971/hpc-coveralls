@@ -38,7 +38,7 @@ writeJson filePath = BSL.writeFile filePath . encode
 toConfig :: HpcCoverallsArgs -> Maybe Config
 toConfig hca = case testSuites hca of
     []             -> Nothing
-    testSuiteNames -> Just $ Config testSuiteNames (excludeDirs hca) PartialAllowed
+    testSuiteNames -> Just $ Config testSuiteNames (excludeDirs hca) StrictlyFullLines
 
 main :: IO ()
 main = do

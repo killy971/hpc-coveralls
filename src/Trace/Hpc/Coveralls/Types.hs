@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveDataTypeable, StandaloneDeriving #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 
 -- |
 -- Module:      Trace.Hpc.Coveralls.Types
@@ -39,11 +39,11 @@ data Hit = Full
 
 type Lix = [Hit]
 
-instance Default Mode where
-    def = PartialAllowed
+instance Default CoverageMode where
+    def = AllowPartialLines
 
-data Mode = StrictFullLine
-          | PartialAllowed
+data CoverageMode = StrictlyFullLines
+                  | AllowPartialLines
     deriving (Data, Eq, Show, Typeable)
 
 -- | Result to the POST request to coveralls.io
