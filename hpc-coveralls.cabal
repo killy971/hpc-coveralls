@@ -42,13 +42,14 @@ source-repository head
 library
   hs-source-dirs: src
   exposed-modules:
-    HpcCoverallsCmdLine,
     Trace.Hpc.Coveralls,
+    Trace.Hpc.Coveralls.Lix,
+    Trace.Hpc.Coveralls.Types
+  other-modules:
     Trace.Hpc.Coveralls.Config,
     Trace.Hpc.Coveralls.Curl,
-    Trace.Hpc.Coveralls.Lix,
     Trace.Hpc.Coveralls.Paths,
-    Trace.Hpc.Coveralls.Types
+    Trace.Hpc.Coveralls.Util
   build-depends:
     aeson,
     base < 5,

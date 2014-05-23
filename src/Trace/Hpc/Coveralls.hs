@@ -20,6 +20,7 @@ import           Trace.Hpc.Coveralls.Config
 import           Trace.Hpc.Coveralls.Lix
 import           Trace.Hpc.Coveralls.Paths
 import           Trace.Hpc.Coveralls.Types
+import           Trace.Hpc.Coveralls.Util
 import           Trace.Hpc.Mix
 import           Trace.Hpc.Tix
 
@@ -54,15 +55,6 @@ toCoverallsJson serviceName jobId mode testSuiteCoverageData = object [
     "source_files" .= toJsonCoverageList testSuiteCoverageData]
     where toJsonCoverageList = map (uncurry $ coverageToJson mode) . M.toList
 
-matchAny :: [String] -> String -> Bool
-matchAny patterns fileName = any (`isPrefixOf` fileName) patterns
-
-getMixPath :: String -> String -> FilePath
-getMixPath testSuiteName modName = mixDir ++ dirName ++ "/"
-    where dirName = case span (/= '/') modName of
-              (_, []) -> testSuiteName
-              (packageId, _) -> packageId
-
 mergeModuleCoverageData :: ModuleCoverageData -> ModuleCoverageData -> ModuleCoverageData
 mergeModuleCoverageData (source, mix, tixs1) (_, _, tixs2) =
     (source, mix, zipWith (+) tixs1 tixs2)
@@ -71,12 +63,7 @@ mergeCoverageData :: [TestSuiteCoverageData] -> TestSuiteCoverageData
 mergeCoverageData = foldr1 (M.unionWith mergeModuleCoverageData)
 
 readMix' :: String -> TixModule -> IO Mix
-readMix' name tix = readMix [mixPath] (Right tix)
-    where mixPath = getMixPath name modName
-          TixModule modName _ _ _ = tix
-
-getTixPath :: String -> IO FilePath
-getTixPath testSuiteName = return $ tixDir ++ testSuiteName ++ "/" ++ getTixFileName testSuiteName
+readMix' name tix = readMix [getMixPath name tix] (Right tix)
 
 -- | Create a list of coverage data from the tix input
 readCoverageData :: String                   -- ^ test suite name
@@ -96,8 +83,6 @@ readCoverageData testSuiteName excludeDirPatterns = do
             return $ M.fromList $ map toFirstAndRest filteredCoverageDataList
             where filePath (Mix fp _ _ _ _) = fp
                   sourceDirFilter = not . matchAny excludeDirPatterns . fst4
-                  fst4 (x, _, _, _) = x
-                  toFirstAndRest (a, b, c, d) = (a, (b, c, d))
 
 -- | Generate coveralls json formatted code coverage from hpc coverage data
 generateCoverallsFromTix :: String   -- ^ CI name
