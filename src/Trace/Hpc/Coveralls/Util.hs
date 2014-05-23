@@ -19,3 +19,10 @@ toFirstAndRest (a, b, c, d) = (a, (b, c, d))
 
 matchAny :: [String] -> String -> Bool
 matchAny patterns fileName = any (`isPrefixOf` fileName) patterns
+
+groupByIndex :: Int -> [(Int, a)] -> [[a]]
+groupByIndex size = take size . flip (++) (repeat []) . groupByIndex' 0 []
+    where groupByIndex' _ ys [] = [ys]
+          groupByIndex' i ys xx@((xi, x) : xs) = if xi == i
+              then groupByIndex' i (x : ys) xs
+              else ys : groupByIndex' (i + 1) [] xx

@@ -44,12 +44,12 @@ library
   exposed-modules:
     Trace.Hpc.Coveralls,
     Trace.Hpc.Coveralls.Lix,
-    Trace.Hpc.Coveralls.Types
+    Trace.Hpc.Coveralls.Types,
+    Trace.Hpc.Coveralls.Util
   other-modules:
     Trace.Hpc.Coveralls.Config,
     Trace.Hpc.Coveralls.Curl,
-    Trace.Hpc.Coveralls.Paths,
-    Trace.Hpc.Coveralls.Util
+    Trace.Hpc.Coveralls.Paths
   build-depends:
     aeson,
     base < 5,

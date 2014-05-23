@@ -14,15 +14,9 @@ import Data.List
 import Data.Ord
 import Prelude hiding (getLine)
 import Trace.Hpc.Coveralls.Types
+import Trace.Hpc.Coveralls.Util
 import Trace.Hpc.Mix
 import Trace.Hpc.Util
-
-groupByIndex :: Int -> [(Int, a)] -> [[a]]
-groupByIndex size = take size . flip (++) (repeat []) . groupByIndex' 0 []
-    where groupByIndex' _ ys [] = [ys]
-          groupByIndex' i ys xx@((xi, x) : xs) = if xi == i
-              then groupByIndex' i (x : ys) xs
-              else ys : groupByIndex' (i + 1) [] xx
 
 toHit :: [Bool] -> Hit
 toHit [] = Irrelevant

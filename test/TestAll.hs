@@ -3,9 +3,10 @@ module Main where
 import System.Exit ( exitFailure, exitSuccess )
 import Test.HUnit
 import TestHpcCoverallsLix
+import TestHpcCoverallsUtil
 
 allTests :: [Test]
-allTests = [testHpcLix]
+allTests = [testLix, testUtil]
 
 main :: IO Counts
 main = do

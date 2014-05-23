@@ -24,36 +24,54 @@ import           Trace.Hpc.Coveralls.Util
 import           Trace.Hpc.Mix
 import           Trace.Hpc.Tix
 
-lixToSimpleCoverage :: CoverageMode -> Lix -> SimpleCoverage
-lixToSimpleCoverage mode = map conv
-    where conv Full    = case mode of
-              StrictlyFullLines -> Number 1
-              AllowPartialLines -> Number 2
-          conv Partial = case mode of
-              StrictlyFullLines -> Number 1
-              AllowPartialLines -> Number 0
-          conv None    = Number 0
-          conv Irrelevant = Null
+type ModuleCoverageData = (
+    String,    -- file source code
+    Mix,       -- module index data
+    [Integer]) -- tixs recorded by hpc
 
-toSimpleCoverage :: CoverageMode -> Int -> [(MixEntry, Integer)] -> SimpleCoverage
-toSimpleCoverage mode lineCount = lixToSimpleCoverage mode . toLix lineCount
+type TestSuiteCoverageData = M.Map FilePath ModuleCoverageData
 
-coverageToJson :: CoverageMode -> FilePath -> ModuleCoverageData -> Value
-coverageToJson mode filePath (source, mix, tixs) = object [
+-- single file coverage data in the format defined by coveralls.io
+type SimpleCoverage = [CoverageEntry]
+
+-- Is there a way to restrict this to only Number and Null?
+type CoverageEntry = Value
+
+type LixConverter = Lix -> SimpleCoverage
+
+strictConverter :: LixConverter
+strictConverter = map $ \lix -> case lix of
+    Full       -> Number 2
+    Partial    -> Number 0
+    None       -> Number 0
+    Irrelevant -> Null
+
+looseConverter :: LixConverter
+looseConverter = map $ \lix -> case lix of
+    Full       -> Number 1
+    Partial    -> Number 1
+    None       -> Number 0
+    Irrelevant -> Null
+
+toSimpleCoverage :: LixConverter -> Int -> [(MixEntry, Integer)] -> SimpleCoverage
+toSimpleCoverage convert lineCount = convert . toLix lineCount
+
+coverageToJson :: LixConverter -> FilePath -> ModuleCoverageData -> Value
+coverageToJson converter filePath (source, mix, tixs) = object [
     "name" .= filePath,
     "source" .= source,
     "coverage" .= coverage]
-    where coverage = toSimpleCoverage mode lineCount mixEntryTixs
+    where coverage = toSimpleCoverage converter lineCount mixEntryTixs
           lineCount = length $ lines source
           mixEntryTixs = zip (getMixEntries mix) tixs
           getMixEntries (Mix _ _ _ _ mixEntries) = mixEntries
 
-toCoverallsJson :: String -> String -> CoverageMode -> TestSuiteCoverageData -> Value
-toCoverallsJson serviceName jobId mode testSuiteCoverageData = object [
+toCoverallsJson :: String -> String -> LixConverter -> TestSuiteCoverageData -> Value
+toCoverallsJson serviceName jobId converter testSuiteCoverageData = object [
     "service_job_id" .= jobId,
     "service_name" .= serviceName,
     "source_files" .= toJsonCoverageList testSuiteCoverageData]
-    where toJsonCoverageList = map (uncurry $ coverageToJson mode) . M.toList
+    where toJsonCoverageList = map (uncurry $ coverageToJson converter) . M.toList
 
 mergeModuleCoverageData :: ModuleCoverageData -> ModuleCoverageData -> ModuleCoverageData
 mergeModuleCoverageData (source, mix, tixs1) (_, _, tixs2) =
@@ -91,7 +109,9 @@ generateCoverallsFromTix :: String   -- ^ CI name
                          -> IO Value -- ^ code coverage result in json format
 generateCoverallsFromTix serviceName jobId config = do
     testSuitesCoverages <- mapM (`readCoverageData` excludedDirPatterns) testSuiteNames
-    return $ toCoverallsJson serviceName jobId mode $ mergeCoverageData testSuitesCoverages
+    return $ toCoverallsJson serviceName jobId converter $ mergeCoverageData testSuitesCoverages
     where excludedDirPatterns = excludedDirs config
           testSuiteNames = testSuites config
-          mode = coverageMode config
+          converter = case coverageMode config of
+              StrictlyFullLines -> strictConverter
+              AllowPartialLines -> looseConverter

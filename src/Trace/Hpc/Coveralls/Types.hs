@@ -11,25 +11,9 @@
 
 module Trace.Hpc.Coveralls.Types where
 
-import           Data.Aeson.Types (Value)
-import           Data.Data
-import qualified Data.Map as M
-import           Network.Curl
-import           System.Console.CmdArgs.Default
-import           Trace.Hpc.Mix
-
-type ModuleCoverageData = (
-    String,    -- file source code
-    Mix,       -- module index data
-    [Integer]) -- tixs recorded by hpc
-
-type TestSuiteCoverageData = M.Map FilePath ModuleCoverageData
-
--- single file coverage data in the format defined by coveralls.io
-type SimpleCoverage = [CoverageEntry]
-
--- Is there a way to restrict this to only Number and Null?
-type CoverageEntry = Value
+import Data.Data
+import Network.Curl
+import System.Console.CmdArgs.Default
 
 data Hit = Full
          | Partial
