@@ -88,7 +88,7 @@ hpc-coveralls --exclude-dir=test1 --exclude-dir=test2 [test-suite-names]
 #### --coverage-mode
 
 As Coveralls doesn't support partial-line coverage yet, hpc-coveralls currently converts hpc coverage data into line based coverage data, which is the only format supported at the moment.
-The `--coverage-mode` option allows to configure how the coverage data is converted into Coveralls format, based on your needs.
+The `--coverage-mode` option allows to configure how the coverage data is converted into Coveralls format, based on your needs.<br/>
 Below are the two modes currently available, with an explanation of what the hit count values mean.
 
 `--coverage-mode=AllowPartialLines` (default):
@@ -110,7 +110,7 @@ hpc-coveralls is still under development and any contributions are welcome!
 
 [Future Plans and Ideas](https://github.com/guillaume-nargeot/hpc-coveralls/wiki/Future-Plans-and-Ideas)
 
-Please share your comments and suggestions on [hpc-coveralls Gitter channel](https://gitter.im/guillaume-nargeot/hpc-coveralls)!
+Please share your comments and suggestions on hpc-coveralls [Gitter channel](https://gitter.im/guillaume-nargeot/hpc-coveralls)!
 
 # License
 
