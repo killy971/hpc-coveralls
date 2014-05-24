@@ -1,5 +1,6 @@
 module Main where
 
+import Control.Applicative
 import Control.Monad
 import Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BSL
@@ -19,7 +20,7 @@ urlApiV1 = "https://coveralls.io/api/v1/jobs"
 getServiceAndJobID :: IO (String, String)
 getServiceAndJobID = do
     env <- getEnvironment
-    case fmap snd $ find (isJust . flip lookup env . fst) ciEnvVars of
+    case snd <$> find (isJust . flip lookup env . fst) ciEnvVars of
         Just (ciName, jobIdVarName) -> do
             jobId <- getEnv jobIdVarName
             return (ciName, jobId)
@@ -34,23 +35,24 @@ getServiceAndJobID = do
 writeJson :: String -> Value -> IO ()
 writeJson filePath = BSL.writeFile filePath . encode
 
-toConfig :: HpcCoverallsArgs -> Maybe Config
-toConfig hca = case testSuites hca of
+getConfig :: HpcCoverallsArgs -> Maybe Config
+getConfig hca = case testSuites hca of
     []             -> Nothing
     testSuiteNames -> Just $ Config testSuiteNames (excludeDirs hca) (coverageMode hca)
 
 main :: IO ()
 main = do
     hca <- cmdArgs hpcCoverallsArgs
-    case toConfig hca of
+    case getConfig hca of
         Nothing -> putStrLn "Please specify a target test suite name" >> exitSuccess
         Just config -> do
             (serviceName, jobId) <- getServiceAndJobID
             coverallsJson <- generateCoverallsFromTix serviceName jobId config
-            let filePath = serviceName ++ "-" ++ jobId ++ ".json"
             when (displayReport hca) $ BSL.putStrLn $ encode coverallsJson
+            let filePath = serviceName ++ "-" ++ jobId ++ ".json"
             writeJson filePath coverallsJson
-            response <- postJson filePath urlApiV1
-            case response of
-                PostSuccess url -> putStrLn ("URL: " ++ url) >> exitSuccess
-                PostFailure msg -> putStrLn ("Error: " ++ msg) >> exitFailure
+            unless (dontSend hca) $ do
+                response <- postJson filePath urlApiV1
+                case response of
+                    PostSuccess url -> putStrLn ("URL: " ++ url) >> exitSuccess
+                    PostFailure msg -> putStrLn ("Error: " ++ msg) >> exitFailure
