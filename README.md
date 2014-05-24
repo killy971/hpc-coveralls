@@ -41,7 +41,11 @@ You can also refer to the `.travis.yml` file of hpc-coveralls itself, which is c
 
 When using hpc 0.6, `cabal test` outputs an error message and exits with the error code `1`, which results in a build failure.
 
-In order to prevent this from happening, hpc-coveralls provides the `run-cabal-test` command which runs `cabal test` and returns with `0` if the regex `^Test suite .*: FAIL$` never matches any line of the output.
+In order to prevent this from happening, hpc-coveralls provides the `run-cabal-test` command which runs `cabal test` and returns with `0` if the following regex never matches any line of the output:
+
+```perl
+/^Test suite .*: FAIL$/
+```
 
 As this issue is fixed in the hpc version shipped with GHC 7.8, you don't have to use `run-cabal-test` when testing with GHC 7.8 and can safely use `cabal test`.
 
@@ -66,7 +70,9 @@ hpc-coveralls test1 test2
 
 ### Options
 
-The `--exclude-dir` option can be used to exclude source files located under a given directory from the coverage report.<br/>
+#### --exclude-dir
+
+The `--exclude-dir` option allows to exclude source files located under a given directory from the coverage report.<br/>
 You can exclude source files located under the `test/` by using this option as in the following example:
 
 ```yaml
@@ -79,22 +85,32 @@ You can specify multiple excluded folders by using the following example syntax:
 hpc-coveralls --exclude-dir=test1 --exclude-dir=test2 [test-suite-names]
 ```
 
-# Limitations
+#### --coverage-mode
 
-As Coveralls doesn't support yet partial-line coverage, the following convention is used to represent line coverage with line hit counts:
+As Coveralls doesn't support partial-line coverage yet, hpc-coveralls currently converts hpc coverage data into line based coverage data, which is the only format supported at the moment.
+The `--coverage-mode` option allows to configure how the coverage data is converted into Coveralls format, based on your needs.
+Below are the two modes currently available, with an explanation of what the hit count values mean.
+
+`--coverage-mode=AllowPartialLines` (default):
 - `0` : the line is never hit,
 - `1` : the line is partially covered,
 - `2` : the line is fully covered.
 
-This convention is the same as the one used by [cloverage](https://github.com/lshift/cloverage) coveralls output for Clojure projects code coverage.
+Note that `AllowPartialLines` conversion mode follows the same convention as the one used by [cloverage](https://github.com/lshift/cloverage) coveralls output for Clojure projects code coverage.
 
-There's an [open issue](https://github.com/lemurheavy/coveralls-public/issues/216) to improve this.
+`--coverage-mode=StrictlyFullLines`:
+- `0` : the line is never hit or only partially covered,
+- `1` : the line is fully covered.
+
+Please also note that there is an [open issue](https://github.com/lemurheavy/coveralls-public/issues/216) on coveralls issue tracker in order to improve this (add support for partial line coverage).
 
 # Contributing
 
 hpc-coveralls is still under development and any contributions are welcome!
 
 [Future Plans and Ideas](https://github.com/guillaume-nargeot/hpc-coveralls/wiki/Future-Plans-and-Ideas)
+
+Please share your comments and suggestions on [hpc-coveralls Gitter channel](https://gitter.im/guillaume-nargeot/hpc-coveralls)!
 
 # License
 
