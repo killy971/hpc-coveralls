@@ -1,3 +1,8 @@
+[0.4.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=5&state=closed)
+-----
+* Add option to configure the coverage data conversion (issue #15)
+* Add option to prevent from sending the coverage report (issue #17)
+
 [0.3.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=4&state=closed)
 -----
 * Support setting multiple test suites (issue #14)
