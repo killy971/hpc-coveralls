@@ -104,6 +104,12 @@ Note that `AllowPartialLines` conversion mode follows the same convention as the
 
 Please also note that there is an [open issue](https://github.com/lemurheavy/coveralls-public/issues/216) on coveralls issue tracker in order to improve this (add support for partial line coverage).
 
+#### --dont-send
+
+The `--dont-send` option prevents hpc-coveralls from sending the coverage report to coveralls.io.
+This option can be used together with `--display-report` for testing purpose.<br/>
+For example, you can try various combinations of the other options and confirm the difference in the resulting report outputs.
+
 # Contributing
 
 hpc-coveralls is still under development and any contributions are welcome!
