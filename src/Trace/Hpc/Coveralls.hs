@@ -41,14 +41,14 @@ type LixConverter = Lix -> SimpleCoverage
 
 strictConverter :: LixConverter
 strictConverter = map $ \lix -> case lix of
-    Full       -> Number 2
+    Full       -> Number 1
     Partial    -> Number 0
     None       -> Number 0
     Irrelevant -> Null
 
 looseConverter :: LixConverter
 looseConverter = map $ \lix -> case lix of
-    Full       -> Number 1
+    Full       -> Number 2
     Partial    -> Number 1
     None       -> Number 0
     Irrelevant -> Null
