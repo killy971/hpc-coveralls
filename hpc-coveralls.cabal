@@ -28,8 +28,8 @@ build-type:     Simple
 stability:      experimental
 cabal-version:  >= 1.8
 tested-with:    GHC == 7.6, GHC == 7.8
-bug-reports:    https://github.com/guillaume-nargeot/hpc-coveralls
-homepage:       https://github.com/guillaume-nargeot/hpc-coveralls/issues
+homepage:       https://github.com/guillaume-nargeot/hpc-coveralls
+bug-reports:    https://github.com/guillaume-nargeot/hpc-coveralls/issues
 
 extra-source-files:
   README.md,
