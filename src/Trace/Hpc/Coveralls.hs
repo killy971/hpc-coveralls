@@ -23,6 +23,7 @@ import           Trace.Hpc.Coveralls.Types
 import           Trace.Hpc.Coveralls.Util
 import           Trace.Hpc.Mix
 import           Trace.Hpc.Tix
+import           Trace.Hpc.Util
 
 type ModuleCoverageData = (
     String,    -- file source code
@@ -32,10 +33,10 @@ type ModuleCoverageData = (
 type TestSuiteCoverageData = M.Map FilePath ModuleCoverageData
 
 -- single file coverage data in the format defined by coveralls.io
-type SimpleCoverage = [CoverageEntry]
+type SimpleCoverage = [CoverageValue]
 
 -- Is there a way to restrict this to only Number and Null?
-type CoverageEntry = Value
+type CoverageValue = Value
 
 type LixConverter = Lix -> SimpleCoverage
 
@@ -53,8 +54,26 @@ looseConverter = map $ \lix -> case lix of
     None       -> Number 0
     Irrelevant -> Null
 
-toSimpleCoverage :: LixConverter -> Int -> [(MixEntry, Integer)] -> SimpleCoverage
+toSimpleCoverage :: LixConverter -> Int -> [CoverageEntry] -> SimpleCoverage
 toSimpleCoverage convert lineCount = convert . toLix lineCount
+
+getExprSource :: [String] -> MixEntry -> [String]
+getExprSource source (hpcPos, _) = subSubSeq startCol endCol subLines
+    where subLines = subSeq startLine endLine source
+          startLine = startLine' - 1
+          startCol = startCol' - 1
+          (startLine', startCol', endLine, endCol) = fromHpcPos hpcPos
+
+-- getExprSource :: [String] -> MixEntry -> [String]
+-- getExprSource source (hpcPos, _) = case subLines of
+    -- [] -> []
+    -- _  -> init subLines ++ [take (endCol - startCol) $ last subLines]
+    -- where subLines = case subSeq startLine endLine source of
+              -- (x : xs) ->  drop startCol x : xs
+              -- []       -> []
+          -- startLine = startLine' - 1
+          -- startCol = startCol' - 1
+          -- (startLine', startCol', endLine, endCol) = fromHpcPos hpcPos
 
 coverageToJson :: LixConverter -> FilePath -> ModuleCoverageData -> Value
 coverageToJson converter filePath (source, mix, tixs) = object [
@@ -63,8 +82,9 @@ coverageToJson converter filePath (source, mix, tixs) = object [
     "coverage" .= coverage]
     where coverage = toSimpleCoverage converter lineCount mixEntryTixs
           lineCount = length $ lines source
-          mixEntryTixs = zip (getMixEntries mix) tixs
-          getMixEntries (Mix _ _ _ _ mixEntries) = mixEntries
+          mixEntryTixs = zip3 mixEntries tixs (map getExprSource' mixEntries)
+          Mix _ _ _ _ mixEntries = mix
+          getExprSource' = getExprSource $ lines source
 
 toCoverallsJson :: String -> String -> LixConverter -> TestSuiteCoverageData -> Value
 toCoverallsJson serviceName jobId converter testSuiteCoverageData = object [
