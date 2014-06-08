@@ -11,17 +11,16 @@ hpc-coveralls is still under development and any contributions are welcome!
 
 ## Travis CI
 
-Commands to add to your project `.travis.yml` when using GHC 7.8:
+Below is the simplest example of configuration for your project `.travis.yml`:
 ```yaml
-before_install:
-  - cabal install hpc-coveralls
 script:
   - cabal configure --enable-tests --enable-library-coverage && cabal build && cabal test
 after_script:
+  - cabal install hpc-coveralls
   - hpc-coveralls [options] [test-suite-names]
 ```
 
-When using a GHC version prior to 7.8, you have to replace the `cabal test` command by `run-cabal-test`, as in the following example:
+If your build fails with an error message starting by "hpc:", just replace the `cabal test` command by `run-cabal-test`, as in the following example:
 ```yaml
 before_install:
   - cabal install hpc-coveralls
@@ -32,14 +31,14 @@ after_script:
   - hpc-coveralls [options] [test-suite-names]
 ```
 
-The reason for this is explained in the next section.
+The will prevent the build to fail because of hpc related reasons, which are usually not fatal and should not affect the coverage data. Details are available in the next section.
 
 For a real world example usage, please refer to [this-project](https://github.com/guillaume-nargeot/project-euler-haskell) `.travis.yml` file ([result on coveralls](https://coveralls.io/r/guillaume-nargeot/project-euler-haskell)).
 You can also refer to the `.travis.yml` file of hpc-coveralls itself, which is configured with [multi-ghc-travis](https://github.com/hvr/multi-ghc-travis).
 
 ## The run-cabal-test command
 
-When using hpc 0.6, `cabal test` outputs an error message and exits with the error code `1`, which results in a build failure.
+Under certain conditions related to the project structure and the version of hpc, `cabal test` may output an error message and exit with the error code `1`, which would result in a build failure.<br/>
 
 In order to prevent this from happening, hpc-coveralls provides the `run-cabal-test` command which runs `cabal test` and returns with `0` if the following regex never matches any line of the output:
 
@@ -47,7 +46,9 @@ In order to prevent this from happening, hpc-coveralls provides the `run-cabal-t
 /^Test suite .*: FAIL$/
 ```
 
-As this issue is fixed in the hpc version shipped with GHC 7.8, you don't have to use `run-cabal-test` when testing with GHC 7.8 and can safely use `cabal test`.
+Below are some of the conditions under which you will likely need to use `run-cabal-test`:
+- when using GHC 7.6 (hpc 0.6 known issue)
+- when using GHC 7.8 with multiple test suites covering the same module(s) (issue #18)
 
 ### Options
 
@@ -67,6 +68,8 @@ For example, if your test suite are named `test1` and `test2`, use the command a
 ```yaml
 hpc-coveralls test1 test2
 ```
+
+As noted earlier, 
 
 ### Options
 
