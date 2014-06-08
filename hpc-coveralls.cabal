@@ -7,13 +7,12 @@ description:
   .
   /Usage/
   .
-  Commands to add to your project .travis.yml when using Travis CI:
+  Below is the simplest example of .travis.yml configuration to use with Travis CI:
   .
-  > before_install:
-  >   - cabal install hpc-coveralls
   > script:
   >   - cabal configure --enable-tests --enable-library-coverage && cabal build && cabal test
   > after_script:
+  >   - cabal install hpc-coveralls
   >   - hpc-coveralls [options] [test-suite-names]
   .
   Further information can be found in the <https://github.com/guillaume-nargeot/hpc-coveralls README>.
