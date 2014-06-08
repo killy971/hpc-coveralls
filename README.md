@@ -31,7 +31,9 @@ after_script:
   - hpc-coveralls [options] [test-suite-names]
 ```
 
-The will prevent the build to fail because of hpc related reasons, which are usually not fatal and should not affect the coverage data. Details are available in the next section.
+This will prevent the build to fail because of hpc related reasons, which are usually not fatal and should not affect the coverage data. Details are available in the next section.
+
+You may also experience some issues related to your project dependencies, which can be solved by using the `--avoid-reinstalls`/`--force-reinstalls` flags.
 
 For a real world example usage, please refer to [this-project](https://github.com/guillaume-nargeot/project-euler-haskell) `.travis.yml` file ([result on coveralls](https://coveralls.io/r/guillaume-nargeot/project-euler-haskell)).
 You can also refer to the `.travis.yml` file of hpc-coveralls itself, which is configured with [multi-ghc-travis](https://github.com/hvr/multi-ghc-travis).
@@ -40,7 +42,7 @@ You can also refer to the `.travis.yml` file of hpc-coveralls itself, which is c
 
 Under certain conditions related to the project structure and the version of hpc, `cabal test` may output an error message and exit with the error code `1`, which would result in a build failure.<br/>
 
-In order to prevent this from happening, hpc-coveralls provides the `run-cabal-test` command which runs `cabal test` and returns with `0` if the following regex never matches any line of the output:
+To prevent this from happening, hpc-coveralls provides the `run-cabal-test` command which runs `cabal test` and returns with `0` if the following regular expression never matches any line of the output:
 
 ```perl
 /^Test suite .*: FAIL$/
@@ -48,7 +50,7 @@ In order to prevent this from happening, hpc-coveralls provides the `run-cabal-t
 
 Below are some of the conditions under which you will likely need to use `run-cabal-test`:
 - when using GHC 7.6 (hpc 0.6 known issue)
-- when using GHC 7.8 with multiple test suites covering the same module(s) (issue #18)
+- when using GHC 7.8 with multiple test suites covering the same module(s) (issue [#18](https://github.com/guillaume-nargeot/hpc-coveralls/issues/18))
 
 ### Options
 
