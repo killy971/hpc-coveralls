@@ -1,3 +1,7 @@
+[0.5.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=6&state=closed)
+-----
+* Mark `otherwise` as fully covered (issue #3)
+
 [0.4.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=5&state=closed)
 -----
 * Add option to configure the coverage data conversion (issue #15)
