@@ -30,13 +30,18 @@ getLine :: MixEntry -> Int
 getLine = fffst . fromHpcPos . fst
     where fffst (x, _, _, _) = x
 
-toLineHit :: (MixEntry, Integer) -> (Int, Bool)
-toLineHit (entry, cnt) = (getLine entry - 1, cnt > 0)
+toLineHit :: CoverageEntry -> (Int, Bool)
+toLineHit (entry, cnt, _source) = (getLine entry - 1, cnt > 0)
+
+adjust :: CoverageEntry -> CoverageEntry
+adjust coverageEntry@(mixEntry, _, source) = case (snd mixEntry, source) of
+    (BinBox GuardBinBox False, ["otherwise"]) -> (mixEntry, 1, source)
+    _ -> coverageEntry
 
 -- | Convert hpc coverage entries into a line based coverage format
-toLix :: Int                   -- ^ Source line count
-      -> [(MixEntry, Integer)] -- ^ Mix entries and associated hit count
-      -> Lix                   -- ^ Line coverage
+toLix :: Int             -- ^ Source line count
+      -> [CoverageEntry] -- ^ Mix entries and associated hit count
+      -> Lix             -- ^ Line coverage
 toLix lineCount entries = map toHit (groupByIndex lineCount sortedLineHits)
     where sortedLineHits = sortBy (comparing fst) lineHits
-          lineHits = map toLineHit entries
+          lineHits = map (toLineHit . adjust) entries

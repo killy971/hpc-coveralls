@@ -14,6 +14,12 @@ module Trace.Hpc.Coveralls.Types where
 import Data.Data
 import Network.Curl
 import System.Console.CmdArgs.Default
+import Trace.Hpc.Mix
+
+type CoverageEntry = (
+    MixEntry, -- mix entry
+    Integer,  -- tix value
+    [String])   -- entry source code
 
 data Hit = Full
          | Partial

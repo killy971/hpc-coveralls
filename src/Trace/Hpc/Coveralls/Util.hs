@@ -20,6 +20,21 @@ toFirstAndRest (a, b, c, d) = (a, (b, c, d))
 matchAny :: [String] -> String -> Bool
 matchAny patterns fileName = any (`isPrefixOf` fileName) patterns
 
+mapFirst :: (a -> a) -> [a] -> [a]
+mapFirst f (x : xs) = f x : xs
+mapFirst _ []       = []
+ 
+mapLast :: (a -> a) -> [a] -> [a]
+mapLast f [x]      = [f x]
+mapLast f (x : xs) = x : mapLast f xs
+mapLast _ []       = []
+
+subSeq :: Int -> Int -> [a] -> [a]
+subSeq start end = drop start . take end
+
+subSubSeq :: Int -> Int -> [[a]] -> [[a]]
+subSubSeq start end = mapFirst (drop start) . mapLast (take end)
+
 groupByIndex :: Int -> [(Int, a)] -> [[a]]
 groupByIndex size = take size . flip (++) (repeat []) . groupByIndex' 0 []
     where groupByIndex' _ ys [] = [ys]
