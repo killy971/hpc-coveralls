@@ -64,17 +64,6 @@ getExprSource source (hpcPos, _) = subSubSeq startCol endCol subLines
           startCol = startCol' - 1
           (startLine', startCol', endLine, endCol) = fromHpcPos hpcPos
 
--- getExprSource :: [String] -> MixEntry -> [String]
--- getExprSource source (hpcPos, _) = case subLines of
-    -- [] -> []
-    -- _  -> init subLines ++ [take (endCol - startCol) $ last subLines]
-    -- where subLines = case subSeq startLine endLine source of
-              -- (x : xs) ->  drop startCol x : xs
-              -- []       -> []
-          -- startLine = startLine' - 1
-          -- startCol = startCol' - 1
-          -- (startLine', startCol', endLine, endCol) = fromHpcPos hpcPos
-
 coverageToJson :: LixConverter -> FilePath -> ModuleCoverageData -> Value
 coverageToJson converter filePath (source, mix, tixs) = object [
     "name" .= filePath,
