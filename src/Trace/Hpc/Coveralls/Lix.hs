@@ -19,11 +19,11 @@ import Trace.Hpc.Mix
 import Trace.Hpc.Util
 
 toHit :: [Bool] -> Hit
-toHit [] = Irrelevant
+toHit []  = Irrelevant
 toHit [x] = if x then Full else None
 toHit xs
-    | and xs = Full
-    | or xs = Partial
+    | and xs    = Full
+    | or xs     = Partial
     | otherwise = None
 
 getLine :: MixEntry -> Int
