@@ -35,8 +35,8 @@ This will prevent the build to fail because of hpc related reasons, which are us
 
 You may also experience some issues related to your project dependencies, which can be solved by using the `--avoid-reinstalls`/`--force-reinstalls` flags.
 
-For a real world example usage, please refer to [this-project](https://github.com/guillaume-nargeot/project-euler-haskell) `.travis.yml` file ([result on coveralls](https://coveralls.io/r/guillaume-nargeot/project-euler-haskell)).
-You can also refer to the `.travis.yml` file of hpc-coveralls itself, which is configured with [multi-ghc-travis](https://github.com/hvr/multi-ghc-travis).
+For a real world example usage, please refer to [this-project](https://github.com/guillaume-nargeot/project-euler-haskell) `.travis.yml` file ([result on coveralls](https://coveralls.io/r/guillaume-nargeot/project-euler-haskell)).<br/>
+Other real world examples can be found on this [wiki page](https://github.com/guillaume-nargeot/hpc-coveralls/wiki/List-of-repositories-using-hpc-coveralls) which contains a list of GitHub repositories using hpc-coveralls.
 
 ## The run-cabal-test command
 
