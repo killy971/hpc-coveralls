@@ -115,6 +115,12 @@ The `--dont-send` option prevents hpc-coveralls from sending the coverage report
 This option can be used together with `--display-report` for testing purpose.<br/>
 For example, you can try various combinations of the other options and confirm the difference in the resulting report outputs.
 
+# Limitations
+
+Because of the way hpc works, coverage data is only generated for modules that are referenced directly or indirectly by the test suites.
+
+As a result, the total package coverage computed by coveralls may be higher than what it really is.
+
 # Contributing
 
 hpc-coveralls is still under development and any contributions are welcome!
