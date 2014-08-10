@@ -54,7 +54,7 @@ library
     Trace.Hpc.Coveralls.Paths
   build-depends:
     aeson,
-    base < 5,
+    base >=4 && < 5,
     bytestring >= 0.10,
     containers >= 0.5,
     cmdargs >= 0.10,
@@ -66,7 +66,7 @@ executable hpc-coveralls
   main-is:        HpcCoverallsMain.hs
   build-depends:
     aeson,
-    base < 5,
+    base >= 4 && < 5,
     bytestring >= 0.10,
     containers >= 0.5,
     cmdargs >= 0.10,
@@ -79,7 +79,7 @@ executable run-cabal-test
   main-is:        RunCabalTestMain.hs
   build-depends:
     async >= 2.0,
-    base < 5,
+    base >=4 && < 5,
     process,
     regex-posix,
     split
