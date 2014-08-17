@@ -20,7 +20,7 @@ after_script:
   - hpc-coveralls [options] [test-suite-names]
 ```
 
-If your build fails with an error message starting by "hpc:", just replace the `cabal test` command by `run-cabal-test`, as in the following example:
+If your build fails during the test phase with an error message starting by "hpc:", just replace the `cabal test` command by `run-cabal-test`, as in the following example:
 ```yaml
 before_install:
   - cabal install hpc-coveralls
@@ -33,7 +33,13 @@ after_script:
 
 This will prevent the build to fail because of hpc related reasons, which are usually not fatal and should not affect the coverage data. Details are available in the next section.
 
-You may also experience some issues related to your project dependencies, which can be solved by using the `--avoid-reinstalls`/`--force-reinstalls` flags.
+You may also experience some issues related to your project dependencies, which can be solved by using the `--avoid-reinstalls`/`--force-reinstalls` flags.</br>
+Another way to solve problems related dependencies is to install hpc-coveralls in a sandbox, as in the example below:
+```yaml
+after_script:
+  - cabal sandbox init && cabal install hpc-coveralls
+  - .cabal-sandbox/bin/hpc-coveralls [options] [test-suite-names]
+```
 
 For a real world example usage, please refer to [this-project](https://github.com/guillaume-nargeot/project-euler-haskell) `.travis.yml` file ([result on coveralls](https://coveralls.io/r/guillaume-nargeot/project-euler-haskell)).<br/>
 Other real world examples can be found on this [wiki page](https://github.com/guillaume-nargeot/hpc-coveralls/wiki/List-of-repositories-using-hpc-coveralls) which contains a list of GitHub repositories using hpc-coveralls.
