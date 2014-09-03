@@ -52,7 +52,7 @@ main = do
             let filePath = serviceName ++ "-" ++ jobId ++ ".json"
             writeJson filePath coverallsJson
             unless (dontSend hca) $ do
-                response <- postJson filePath urlApiV1
+                response <- postJson filePath urlApiV1 (printResponse hca)
                 case response of
                     PostSuccess url -> putStrLn ("URL: " ++ url) >> exitSuccess
                     PostFailure msg -> putStrLn ("Error: " ++ msg) >> exitFailure

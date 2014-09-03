@@ -12,6 +12,7 @@
 
 module Trace.Hpc.Coveralls.Curl ( postJson, PostResult (..) ) where
 
+import           Control.Monad
 import           Data.Aeson
 import           Data.Aeson.Types (parseMaybe)
 import qualified Data.ByteString.Lazy.Char8 as LBS
@@ -34,11 +35,13 @@ httpPost path = [HttpPost "json_file" Nothing (ContentFile path) [] Nothing]
 -- | Send file content over HTTP using POST request
 postJson :: String        -- ^ target file
          -> URLString     -- ^ target url
+         -> Bool          -- ^ print json response if true
          -> IO PostResult -- ^ POST request result
-postJson path url = do
+postJson path url printResponse = do
     h <- initialize
     setopt h (CurlVerbose True)
     setopt h (CurlURL url)
     setopt h (CurlHttpPost $ httpPost path)
     r <- perform_with_response_ h
+    when printResponse $ putStrLn $ respBody r
     return $ parseResponse r

@@ -12,6 +12,7 @@ data HpcCoverallsArgs = CmdMain
     { excludeDirs   :: [String]
     , testSuites    :: [String]
     , displayReport :: Bool
+    , printResponse :: Bool
     , dontSend      :: Bool
     , coverageMode  :: CoverageMode
     } deriving (Data, Show, Typeable)
@@ -20,6 +21,7 @@ hpcCoverallsArgs :: HpcCoverallsArgs
 hpcCoverallsArgs = CmdMain
     { excludeDirs   = []                &= explicit &= typDir     &= name "exclude-dir"    &= help "Exclude sources files under the matching directory from the coverage report"
     , displayReport = False             &= explicit               &= name "display-report" &= help "Display the json code coverage report that will be sent to coveralls.io"
+    , printResponse = False             &= explicit               &= name "print-response" &= help "Prints the json reponse received from coveralls.io"
     , dontSend      = False             &= explicit               &= name "dont-send"      &= help "Do not send the report to coveralls.io"
     , coverageMode  = AllowPartialLines &= explicit &= typ "MODE" &= name "coverage-mode"  &= help "Coverage conversion mode: AllowPartialLines (default), StrictlyFullLines"
     , testSuites    = []                &= typ "TEST-SUITE" &= args
