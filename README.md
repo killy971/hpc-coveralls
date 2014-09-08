@@ -117,9 +117,13 @@ Please also note that there is an [open issue](https://github.com/lemurheavy/cov
 
 #### --dont-send
 
-The `--dont-send` option prevents hpc-coveralls from sending the coverage report to coveralls.io.
+This boolean option prevents hpc-coveralls from sending the coverage report to coveralls.io.
 This option can be used together with `--display-report` for testing purpose.<br/>
 For example, you can try various combinations of the other options and confirm the difference in the resulting report outputs.
+
+#### --print-response
+
+This boolean option prints the raw json response received after posting the coverage report to coveralls.io.
 
 # Limitations
 
