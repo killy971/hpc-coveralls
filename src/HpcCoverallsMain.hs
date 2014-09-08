@@ -54,5 +54,10 @@ main = do
             unless (dontSend hca) $ do
                 response <- postJson filePath urlApiV1 (printResponse hca)
                 case response of
-                    PostSuccess url -> putStrLn ("URL: " ++ url) >> exitSuccess
+                    PostSuccess url -> do
+                        putStrLn ("URL: " ++ url)
+                        coverageResult <- readCoverageResult url
+                        case coverageResult of
+                            Just totalCoverage -> putStrLn ("Coverage: " ++ totalCoverage) >> exitSuccess
+                            Nothing -> exitSuccess
                     PostFailure msg -> putStrLn ("Error: " ++ msg) >> exitFailure
