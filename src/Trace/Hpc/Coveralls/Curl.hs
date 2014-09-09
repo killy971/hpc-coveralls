@@ -60,6 +60,7 @@ readCoverageResult :: URLString         -- ^ target url
                    -> IO (Maybe String) -- ^ coverage result
 readCoverageResult url = do
     response <- curlGetString url []
+    putStrLn $ snd response
     return $ case response of
         (CurlOK, body) -> Just $ extractCoverage body
         _ -> Nothing
