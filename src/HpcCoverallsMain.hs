@@ -1,18 +1,19 @@
 module Main where
 
-import Control.Applicative
-import Control.Monad
-import Data.Aeson
+import           Control.Applicative
+import           Control.Concurrent
+import           Control.Monad
+import           Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BSL
-import Data.List
-import Data.Maybe
-import HpcCoverallsCmdLine
-import System.Console.CmdArgs
-import System.Environment (getEnv, getEnvironment)
-import System.Exit (exitFailure, exitSuccess)
-import Trace.Hpc.Coveralls
-import Trace.Hpc.Coveralls.Config (Config(Config))
-import Trace.Hpc.Coveralls.Curl
+import           Data.List
+import           Data.Maybe
+import           HpcCoverallsCmdLine
+import           System.Console.CmdArgs
+import           System.Environment (getEnv, getEnvironment)
+import           System.Exit (exitFailure, exitSuccess)
+import           Trace.Hpc.Coveralls
+import           Trace.Hpc.Coveralls.Config (Config(Config))
+import           Trace.Hpc.Coveralls.Curl
 
 urlApiV1 :: String
 urlApiV1 = "https://coveralls.io/api/v1/jobs"
@@ -56,6 +57,8 @@ main = do
                 case response of
                     PostSuccess url -> do
                         putStrLn ("URL: " ++ url)
+                        -- wait until the page is available
+                        threadDelay (10 * 60 * 1000)
                         coverageResult <- readCoverageResult url
                         case coverageResult of
                             Just totalCoverage -> putStrLn ("Coverage: " ++ totalCoverage) >> exitSuccess

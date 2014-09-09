@@ -12,7 +12,6 @@
 
 module Trace.Hpc.Coveralls.Curl ( postJson, readCoverageResult, PostResult (..) ) where
 
-import           Control.Concurrent
 import           Control.Monad
 import           Data.Aeson
 import           Data.Aeson.Types (parseMaybe)
@@ -62,7 +61,5 @@ readCoverageResult :: URLString         -- ^ target url
 readCoverageResult url = do
     response <- curlGetString url []
     return $ case response of
-        (CurlOK, body) -> do
-            threadDelay (10 * 60 * 1000) -- wait until the page is available
-            Just $ extractCoverage body
+        (CurlOK, body) -> Just $ extractCoverage body
         _ -> Nothing
