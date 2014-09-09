@@ -57,10 +57,11 @@ extractCoverage = head . splitOn "<" . (!! 1) . splitOn prefix
 
 -- | Read the coveraege result page from coveralls.io
 readCoverageResult :: URLString         -- ^ target url
+                   -> Bool              -- ^ print json response if true
                    -> IO (Maybe String) -- ^ coverage result
-readCoverageResult url = do
+readCoverageResult url printResponse = do
     response <- curlGetString url []
-    putStrLn $ snd response
+    when printResponse $ putStrLn $ snd response
     return $ case response of
         (CurlOK, body) -> Just $ extractCoverage body
         _ -> Nothing
