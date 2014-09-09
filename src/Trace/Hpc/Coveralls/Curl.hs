@@ -61,7 +61,8 @@ readCoverageResult :: URLString         -- ^ target url
                    -> IO (Maybe String) -- ^ coverage result
 readCoverageResult url = do
     response <- curlGetString url []
-    threadDelay (10 * 60 * 1000) -- wait until the page is available
     return $ case response of
-        (CurlOK, body) -> Just $ extractCoverage body
+        (CurlOK, body) -> do
+            threadDelay (10 * 60 * 1000) -- wait until the page is available
+            Just $ extractCoverage body
         _ -> Nothing
