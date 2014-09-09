@@ -58,7 +58,7 @@ main = do
                     PostSuccess url -> do
                         putStrLn ("URL: " ++ url)
                         -- wait until the page is available
-                        threadDelay (10 * 60 * 1000)
+                        threadDelay (10 * 10000000)
                         coverageResult <- readCoverageResult url
                         case coverageResult of
                             Just totalCoverage -> putStrLn ("Coverage: " ++ totalCoverage) >> exitSuccess
