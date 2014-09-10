@@ -1,3 +1,8 @@
+[0.6.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=7&state=closed)
+-----
+* Add flag to print the raw json responses from coveralls.io (issue #24)
+* Retrieve and display total coverage result on success response from coveralls.io (issue #21)
+
 [0.5.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=6&state=closed)
 -----
 * Mark `otherwise` as fully covered (issue #3)
