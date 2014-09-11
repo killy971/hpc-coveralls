@@ -60,6 +60,7 @@ library
     cmdargs >= 0.10,
     curl >= 1.3.8,
     hpc >= 0.6,
+    safe >= 0.3,
     split
 
 executable hpc-coveralls
@@ -73,6 +74,7 @@ executable hpc-coveralls
     cmdargs >= 0.10,
     curl >= 1.3.8,
     hpc >= 0.6,
+    safe >= 0.3,
     split
   ghc-options:    -Wall -fwarn-tabs -fwarn-incomplete-uni-patterns
 

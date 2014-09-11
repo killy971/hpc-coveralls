@@ -12,6 +12,7 @@
 
 module Trace.Hpc.Coveralls.Curl ( postJson, readCoverageResult, PostResult (..) ) where
 
+import           Control.Applicative
 import           Control.Monad
 import           Data.Aeson
 import           Data.Aeson.Types (parseMaybe)
@@ -19,6 +20,7 @@ import qualified Data.ByteString.Lazy.Char8 as LBS
 import           Data.List.Split
 import           Data.Maybe
 import           Network.Curl
+import           Safe
 import           Trace.Hpc.Coveralls.Types
 
 parseResponse :: CurlResponse -> PostResult
@@ -51,8 +53,8 @@ postJson path url printResponse = do
 --   page content.
 --   The current implementation is kept as low level as possible in order not
 --   to increase the library build time, by not relying on additional packages.
-extractCoverage :: String -> String
-extractCoverage = head . splitOn "<" . (!! 1) . splitOn prefix
+extractCoverage :: String -> Maybe String
+extractCoverage str = splitOn "<" <$> splitOn prefix str `atMay` 1 >>= headMay
     where prefix = "div class='coverage'>\n<strong>"
 
 -- | Read the coveraege result page from coveralls.io
@@ -63,5 +65,5 @@ readCoverageResult url printResponse = do
     response <- curlGetString url []
     when printResponse $ putStrLn $ snd response
     return $ case response of
-        (CurlOK, body) -> Just $ extractCoverage body
+        (CurlOK, body) -> extractCoverage body
         _ -> Nothing
