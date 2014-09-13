@@ -1,4 +1,5 @@
 [0.6.1](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=8&state=closed)
+-----
 * Safer implementation of the result coverage value retrieval from coveralls.io (issue 25)
 * Set the delay before retrieving the result to 10 seconds (issue #26)
 
