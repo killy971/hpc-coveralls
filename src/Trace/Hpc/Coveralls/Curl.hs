@@ -54,7 +54,7 @@ postJson path url printResponse = do
 --   The current implementation is kept as low level as possible in order not
 --   to increase the library build time, by not relying on additional packages.
 extractCoverage :: String -> Maybe String
-extractCoverage str = splitOn "<" <$> splitOn prefix str `atMay` 1 >>= headMay
+extractCoverage body = splitOn "<" <$> splitOn prefix body `atMay` 1 >>= headMay
     where prefix = "div class='coverage'>\n<strong>"
 
 -- | Read the coveraege result page from coveralls.io
