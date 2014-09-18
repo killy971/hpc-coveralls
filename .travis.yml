@@ -1,11 +1,6 @@
 env:
-  - GHCVER=7.4.2
   - GHCVER=7.6.3
   - GHCVER=7.8.3
-
-matrix:
-  allow_failures:
-    - env: GHCVER=7.4.2
 
 before_install:
   - travis_retry sudo add-apt-repository -y ppa:hvr/ghc
@@ -23,7 +18,7 @@ script:
   - cabal-1.18 configure --enable-tests --enable-benchmarks --enable-library-coverage -v2
   - cabal-1.18 build
   - |
-    if [ $GHCVER = "7.8.2" ]; then
+    if [ $GHCVER = "7.8.3" ]; then
       cabal-1.18 test --show-details=always
     else
       dist/build/run-cabal-test/run-cabal-test --cabal-name=cabal-1.18 --show-details=always
