@@ -77,8 +77,6 @@ For example, if your test suite are named `test1` and `test2`, use the command a
 hpc-coveralls test1 test2
 ```
 
-As noted earlier, 
-
 ### Options
 
 #### --exclude-dir
