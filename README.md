@@ -82,7 +82,7 @@ hpc-coveralls test1 test2
 #### --exclude-dir
 
 The `--exclude-dir` option allows to exclude source files located under a given directory from the coverage report.<br/>
-You can exclude source files located under the `test/` by using this option as in the following example:
+You can exclude source files located under the `test/` directory by using this option as in the following example:
 
 ```yaml
 hpc-coveralls --exclude-dir=test [test-suite-names]
@@ -126,8 +126,8 @@ This boolean option prints the raw json response received after posting the cove
 # Limitations
 
 Because of the way hpc works, coverage data is only generated for modules that are referenced directly or indirectly by the test suites.
-
 As a result, the total package coverage computed by coveralls may be higher than what it really is.
+An option will be added soon in order to allow specifying source folders to include in the total coverage computation.
 
 # Contributing
 
