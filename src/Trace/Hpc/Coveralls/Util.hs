@@ -17,6 +17,10 @@ fst4 (x, _, _, _) = x
 toFirstAndRest :: (a, b, c, d) -> (a, (b, c, d))
 toFirstAndRest (a, b, c, d) = (a, (b, c, d))
 
+listToMaybe :: [a] -> Maybe [a]
+listToMaybe [] = Nothing
+listToMaybe xs = Just xs
+
 matchAny :: [String] -> String -> Bool
 matchAny patterns fileName = any (`isPrefixOf` fileName) patterns
 

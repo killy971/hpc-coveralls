@@ -6,7 +6,7 @@ import           Control.Monad
 import           Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import           Data.List
-import           Data.Maybe
+import           Data.Maybe hiding (listToMaybe)
 import           HpcCoverallsCmdLine
 import           System.Console.CmdArgs
 import           System.Environment (getEnv, getEnvironment)
@@ -14,6 +14,7 @@ import           System.Exit (exitFailure, exitSuccess)
 import           Trace.Hpc.Coveralls
 import           Trace.Hpc.Coveralls.Config (Config(Config))
 import           Trace.Hpc.Coveralls.Curl
+import           Trace.Hpc.Coveralls.Util
 
 urlApiV1 :: String
 urlApiV1 = "https://coveralls.io/api/v1/jobs"
@@ -37,9 +38,7 @@ writeJson :: String -> Value -> IO ()
 writeJson filePath = BSL.writeFile filePath . encode
 
 getConfig :: HpcCoverallsArgs -> Maybe Config
-getConfig hca = case testSuites hca of
-    []             -> Nothing
-    testSuiteNames -> Just $ Config testSuiteNames (excludeDirs hca) (coverageMode hca)
+getConfig hca = Config (excludeDirs hca) (coverageMode hca) <$> listToMaybe (testSuites hca)
 
 main :: IO ()
 main = do
