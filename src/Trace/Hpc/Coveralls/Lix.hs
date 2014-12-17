@@ -31,12 +31,13 @@ getLine = fffst . fromHpcPos . fst
     where fffst (x, _, _, _) = x
 
 toLineHit :: CoverageEntry -> (Int, Bool)
-toLineHit (entry, cnt, _source) = (getLine entry - 1, cnt > 0)
+toLineHit (entries, counts, _source) = (getLine (head entries) - 1, (minimum counts) > 0)
 
 adjust :: CoverageEntry -> CoverageEntry
-adjust coverageEntry@(mixEntry, _, source) = case (snd mixEntry, source) of
-    (BinBox GuardBinBox False, ["otherwise"]) -> (mixEntry, 1, source)
-    _ -> coverageEntry
+adjust = id
+-- adjust coverageEntry@(mixEntry, _, source) = case (snd mixEntry, source) of
+--     (BinBox GuardBinBox False, ["otherwise"]) -> (mixEntry, 1, source)
+--     _ -> coverageEntry
 
 -- | Convert hpc coverage entries into a line based coverage format
 toLix :: Int             -- ^ Source line count
