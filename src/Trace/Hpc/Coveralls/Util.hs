@@ -11,6 +11,15 @@ module Trace.Hpc.Coveralls.Util where
 
 import Data.List
 
+fst3 :: (a, b, c) -> a
+fst3 (x, _, _) = x
+
+snd3 :: (a, b, c) -> b
+snd3 (_, x, _) = x
+
+trd3 :: (a, b, c) -> c
+trd3 (_, _, x) = x
+
 fst4 :: (a, b, c, d) -> a
 fst4 (x, _, _, _) = x
 
