@@ -31,7 +31,7 @@ getLine = fffst . fromHpcPos . fst
     where fffst (x, _, _, _) = x
 
 toLineHit :: CoverageEntry -> (Int, Bool)
-toLineHit (entries, counts, _source) = (getLine (head entries) - 1, minimum counts > 0)
+toLineHit (entries, counts, _source) = (getLine (head entries) - 1, all (> 0) counts)
 -- TODO confirm the validity of "(minimum counts) > 0"
 
 adjust :: CoverageEntry -> CoverageEntry
