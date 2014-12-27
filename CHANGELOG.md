@@ -1,3 +1,7 @@
+[0.7.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v0.7.0+is:closed)
+-----
+* Fix coverage conversion rule for otherwise bug
+
 [0.6.1](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=8&state=closed)
 -----
 * Safer implementation of the result coverage value retrieval from coveralls.io (issue 25)
