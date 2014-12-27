@@ -65,7 +65,6 @@ getExprSource source (hpcPos, _) = subSubSeq startCol endCol subLines
           startCol = startCol' - 1
           (startLine', startCol', endLine, endCol) = fromHpcPos hpcPos
 
-                                                     -- [(MixEntry], [Integer], [String])]
 groupMixEntryTixs :: [(MixEntry, Integer, [String])] -> [CoverageEntry]
 groupMixEntryTixs = map mergeOnLst3 . groupBy ((==) `on` fst . fst3)
     where mergeOnLst3 xxs@(x : _) = (map fst3 xxs, map snd3 xxs, trd3 x)
