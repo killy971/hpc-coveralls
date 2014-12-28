@@ -62,8 +62,11 @@ readCoverageResult :: URLString         -- ^ target url
                    -> Bool              -- ^ print json response if true
                    -> IO (Maybe String) -- ^ coverage result
 readCoverageResult url printResponse = do
-    response <- curlGetString url []
+    response <- curlGetString url curlOptions
     when printResponse $ putStrLn $ snd response
     return $ case response of
         (CurlOK, body) -> extractCoverage body
         _ -> Nothing
+    where curlOptions = [
+              CurlTimeout 60,
+              CurlConnectTimeout 60]
