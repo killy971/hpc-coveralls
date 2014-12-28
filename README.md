@@ -66,7 +66,7 @@ The `--cabal-name` option can be used to specify a custom executable name instea
 Below is an example which can be useful for projects with a Travis configuration based on [multi-ghc-travis](https://github.com/hvr/multi-ghc-travis):
 
 ```yaml
-run-cabal-test --cabal-name=cabal-1.18
+run-cabal-test --cabal-name=cabal-1.20
 ```
 
 ## The hpc-coveralls command
@@ -114,6 +114,10 @@ Note that `AllowPartialLines` conversion mode follows the same convention as the
 - `1` : the line is fully covered.
 
 Please also note that there is an [open issue](https://github.com/lemurheavy/coveralls-public/issues/216) on coveralls issue tracker in order to improve this (add support for partial line coverage).
+
+#### --display-report
+
+This boolean option prints the raw json coverage report to be sent to coveralls.io.
 
 #### --dont-send
 
