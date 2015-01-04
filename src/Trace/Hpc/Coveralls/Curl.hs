@@ -14,6 +14,7 @@ module Trace.Hpc.Coveralls.Curl ( postJson, readCoverageResult, PostResult (..) 
 
 import           Control.Applicative
 import           Control.Monad
+import           Control.Retry
 import           Data.Aeson
 import           Data.Aeson.Types (parseMaybe)
 import qualified Data.ByteString.Lazy.Char8 as LBS
@@ -49,6 +50,14 @@ postJson path url printResponse = do
     when printResponse $ putStrLn $ respBody r
     return $ parseResponse r
 
+-- | Exponential retry policy of 10 seconds initial delay, up to 5 times
+expRetryPolicy :: RetryPolicy
+expRetryPolicy = exponentialBackoff (10 * 1000 * 1000) <> limitRetries 5
+
+performWithRetry :: IO (Maybe a) -> IO (Maybe a)
+performWithRetry = retrying expRetryPolicy isNothingM
+    where isNothingM _ = return . isNothing
+
 -- | Extract the total coverage percentage value from coveralls coverage result
 --   page content.
 --   The current implementation is kept as low level as possible in order not
@@ -61,12 +70,14 @@ extractCoverage body = splitOn "<" <$> splitOn prefix body `atMay` 1 >>= headMay
 readCoverageResult :: URLString         -- ^ target url
                    -> Bool              -- ^ print json response if true
                    -> IO (Maybe String) -- ^ coverage result
-readCoverageResult url printResponse = do
-    response <- curlGetString url curlOptions
-    when printResponse $ putStrLn $ snd response
-    return $ case response of
-        (CurlOK, body) -> extractCoverage body
-        _ -> Nothing
-    where curlOptions = [
-              CurlTimeout 60,
-              CurlConnectTimeout 60]
+readCoverageResult url printResponse =
+    performWithRetry readAction
+    where readAction = do
+              response <- curlGetString url curlOptions
+              when printResponse $ putStrLn $ snd response
+              return $ case response of
+                  (CurlOK, body) -> extractCoverage body
+                  _ -> Nothing
+              where curlOptions = [
+                        CurlTimeout 60,
+                        CurlConnectTimeout 60]
