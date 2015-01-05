@@ -73,6 +73,7 @@ readCoverageResult :: URLString         -- ^ target url
 readCoverageResult url printResponse =
     performWithRetry readAction
     where readAction = do
+              putStrLn "Attempting to read total coverage result"
               response <- curlGetString url curlOptions
               when printResponse $ putStrLn $ snd response
               return $ case response of
