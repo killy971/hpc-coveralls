@@ -1,6 +1,11 @@
+[0.8.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v0.8.0+is:closed)
+-----
+* Introduce retry policy to http requests (issue #31)
+* Fix coverage result reading (issue #32)
+
 [0.7.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v0.7.0+is:closed)
 -----
-* Fix coverage conversion rule for otherwise bug
+* Fix coverage conversion rule for otherwise (issue #20)
 
 [0.6.1](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=8&state=closed)
 -----

@@ -1,7 +1,7 @@
 hpc-coveralls
 =============
 
-[![Build Status](http://img.shields.io/travis/guillaume-nargeot/hpc-coveralls/master.svg)](https://travis-ci.org/guillaume-nargeot/hpc-coveralls) [![Gitter chat](http://img.shields.io/badge/gitter-chat--room-brightgreen.svg)](https://gitter.im/guillaume-nargeot/hpc-coveralls) [![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)](https://tldrlegal.com/license/bsd-3-clause-license-%28revised%29) [![v0.7.0 on Hackage](http://img.shields.io/badge/hackage-0.7.0-brightgreen.svg)](http://hackage.haskell.org/package/hpc-coveralls-0.7.0) [![Stories in Ready](https://badge.waffle.io/guillaume-nargeot/hpc-coveralls.png?label=ready&title=Ready)](https://waffle.io/guillaume-nargeot/hpc-coveralls)
+[![Build Status](http://img.shields.io/travis/guillaume-nargeot/hpc-coveralls/master.svg)](https://travis-ci.org/guillaume-nargeot/hpc-coveralls) [![Gitter chat](http://img.shields.io/badge/gitter-chat--room-brightgreen.svg)](https://gitter.im/guillaume-nargeot/hpc-coveralls) [![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)](https://tldrlegal.com/license/bsd-3-clause-license-%28revised%29) [![v0.8.0 on Hackage](http://img.shields.io/badge/hackage-0.8.0-brightgreen.svg)](http://hackage.haskell.org/package/hpc-coveralls-0.8.0) [![Stories in Ready](https://badge.waffle.io/guillaume-nargeot/hpc-coveralls.png?label=ready&title=Ready)](https://waffle.io/guillaume-nargeot/hpc-coveralls)
 
 hpc-coveralls converts and sends Haskell projects hpc code coverage to [coverall.io](http://coveralls.io/).
 
