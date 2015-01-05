@@ -52,7 +52,7 @@ postJson path url printResponse = do
 
 -- | Exponential retry policy of 10 seconds initial delay, up to 5 times
 expRetryPolicy :: RetryPolicy
-expRetryPolicy = exponentialBackoff (10 * 1000 * 1000) <> limitRetries 5
+expRetryPolicy = exponentialBackoff (10 * 1000 * 1000) <> limitRetries 3
 
 performWithRetry :: IO (Maybe a) -> IO (Maybe a)
 performWithRetry = retrying expRetryPolicy isNothingM
@@ -64,7 +64,7 @@ performWithRetry = retrying expRetryPolicy isNothingM
 --   to increase the library build time, by not relying on additional packages.
 extractCoverage :: String -> Maybe String
 extractCoverage body = splitOn "<" <$> splitOn prefix body `atMay` 1 >>= headMay
-    where prefix = "div class='coverage'>\n<strong>"
+    where prefix = "div class='run-statistics'>\n<strong>"
 
 -- | Read the coveraege result page from coveralls.io
 readCoverageResult :: URLString         -- ^ target url
