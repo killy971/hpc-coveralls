@@ -35,7 +35,7 @@ script:
     fi)
 
 after_script:
-  - dist/build/hpc-coveralls/hpc-coveralls test-all --exclude-dir=test --display-report --print-response
+  - dist/build/hpc-coveralls/hpc-coveralls test-all --exclude-dir=test --display-report
 
 notifications:
   webhooks:

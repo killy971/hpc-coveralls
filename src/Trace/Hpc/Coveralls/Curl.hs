@@ -64,7 +64,7 @@ performWithRetry = retrying expRetryPolicy isNothingM
 --   to increase the library build time, by not relying on additional packages.
 extractCoverage :: String -> Maybe String
 extractCoverage body = splitOn "<" <$> splitOn prefix body `atMay` 1 >>= headMay
-    where prefix = "div class='coverage'>\n<strong>"
+    where prefix = "div class='run-statistics'>\n<strong>"
 
 -- | Read the coveraege result page from coveralls.io
 readCoverageResult :: URLString         -- ^ target url
