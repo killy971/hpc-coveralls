@@ -61,5 +61,5 @@ main = do
                         coverageResult <- readCoverageResult url (printResponse hca)
                         case coverageResult of
                             Just totalCoverage -> putStrLn ("Coverage: " ++ totalCoverage) >> exitSuccess
-                            Nothing -> exitSuccess
+                            Nothing -> putStrLn "Failed to read total coverage" >> exitSuccess
                     PostFailure msg -> putStrLn ("Error: " ++ msg) >> exitFailure
