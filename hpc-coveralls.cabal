@@ -23,7 +23,7 @@ license:        BSD3
 license-file:   LICENSE
 author:         Guillaume Nargeot
 maintainer:     Guillaume Nargeot <guillaume+hackage@nargeot.com>
-copyright:      (c) 2014 Guillaume Nargeot
+copyright:      (c) 2014-2015 Guillaume Nargeot
 category:       Control
 build-type:     Simple
 stability:      experimental
