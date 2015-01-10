@@ -25,6 +25,6 @@ hpcCoverallsArgs = CmdMain
     , dontSend      = False             &= explicit               &= name "dont-send"      &= help "Do not send the report to coveralls.io"
     , coverageMode  = AllowPartialLines &= explicit &= typ "MODE" &= name "coverage-mode"  &= help "Coverage conversion mode: AllowPartialLines (default), StrictlyFullLines"
     , testSuites    = []                &= typ "TEST-SUITE" &= args
-    } &= summary ("hpc-coveralls-" ++ versionString version ++ ", (C) Guillaume Nargeot 2014")
+    } &= summary ("hpc-coveralls-" ++ versionString version ++ ", (C) Guillaume Nargeot 2014-2015")
       &= program "hpc-coveralls"
     where versionString = intercalate "." . map show . versionBranch

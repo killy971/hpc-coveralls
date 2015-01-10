@@ -3,7 +3,7 @@
 
 -- |
 -- Module:      Trace.Hpc.Coveralls.Curl
--- Copyright:   (c) 2014 Guillaume Nargeot
+-- Copyright:   (c) 2014-2015 Guillaume Nargeot
 -- License:     BSD3
 -- Maintainer:  Guillaume Nargeot <guillaume+hackage@nargeot.com>
 -- Stability:   experimental
