@@ -95,6 +95,9 @@ test-suite test-all
   hs-source-dirs: test
   type:           exitcode-stdio-1.0
   main-is:        TestAll.hs
+  other-modules:
+    TestHpcCoverallsLix,
+    TestHpcCoverallsUtil
   build-depends:
     base,
     hpc-coveralls,
