@@ -117,6 +117,10 @@ Note that `AllowPartialLines` conversion mode follows the same convention as the
 
 Please also note that there is an [open issue](https://github.com/lemurheavy/coveralls-public/issues/216) on coveralls issue tracker in order to improve this (add support for partial line coverage).
 
+#### --repo-token
+
+This option allows to specify your repo token when sending the report to coveralls.io.
+
 #### --display-report
 
 This boolean option prints the raw json coverage report to be sent to coveralls.io.
