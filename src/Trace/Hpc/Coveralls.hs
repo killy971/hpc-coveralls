@@ -88,7 +88,6 @@ toCoverallsJson serviceName jobId repoTokenM converter testSuiteCoverageData =
     object $ mcons (("repo_token" .=) <$> repoTokenM) base
     where base = [
               "service_job_id" .= jobId,
-              "repo_token" .= repoTokenM,
               "service_name" .= serviceName,
               "source_files" .= toJsonCoverageList testSuiteCoverageData]
           toJsonCoverageList = map (uncurry $ coverageToJson converter) . M.toList
