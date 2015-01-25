@@ -82,9 +82,10 @@ coverageToJson converter filePath (source, mix, tixs) = object [
           Mix _ _ _ _ mixEntries = mix
           getExprSource' = getExprSource $ lines source
 
-toCoverallsJson :: String -> String -> LixConverter -> TestSuiteCoverageData -> Value
-toCoverallsJson serviceName jobId converter testSuiteCoverageData = object [
+toCoverallsJson :: String -> String -> Maybe String -> LixConverter -> TestSuiteCoverageData -> Value
+toCoverallsJson serviceName jobId repoToken converter testSuiteCoverageData = object [
     "service_job_id" .= jobId,
+    "repo_token" .= repoToken,
     "service_name" .= serviceName,
     "source_files" .= toJsonCoverageList testSuiteCoverageData]
     where toJsonCoverageList = map (uncurry $ coverageToJson converter) . M.toList
@@ -125,9 +126,10 @@ generateCoverallsFromTix :: String   -- ^ CI name
                          -> IO Value -- ^ code coverage result in json format
 generateCoverallsFromTix serviceName jobId config = do
     testSuitesCoverages <- mapM (`readCoverageData` excludedDirPatterns) testSuiteNames
-    return $ toCoverallsJson serviceName jobId converter $ mergeCoverageData testSuitesCoverages
+    return $ toCoverallsJson serviceName jobId repoTokenM converter $ mergeCoverageData testSuitesCoverages
     where excludedDirPatterns = excludedDirs config
           testSuiteNames = testSuites config
+          repoTokenM = repoToken config
           converter = case coverageMode config of
               StrictlyFullLines -> strictConverter
               AllowPartialLines -> looseConverter

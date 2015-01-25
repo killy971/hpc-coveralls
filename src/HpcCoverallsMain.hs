@@ -38,7 +38,7 @@ writeJson :: String -> Value -> IO ()
 writeJson filePath = BSL.writeFile filePath . encode
 
 getConfig :: HpcCoverallsArgs -> Maybe Config
-getConfig hca = Config (excludeDirs hca) (coverageMode hca) <$> listToMaybe (testSuites hca)
+getConfig hca = Config (excludeDirs hca) (coverageMode hca) (repoToken hca) <$> listToMaybe (testSuites hca)
 
 main :: IO ()
 main = do
