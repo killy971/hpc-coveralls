@@ -30,6 +30,10 @@ listToMaybe :: [a] -> Maybe [a]
 listToMaybe [] = Nothing
 listToMaybe xs = Just xs
 
+mcons :: Maybe a -> [a] -> [a]
+mcons Nothing xs = xs
+mcons (Just x) xs = x : xs
+
 matchAny :: [String] -> String -> Bool
 matchAny patterns fileName = any (`isPrefixOf` fileName) patterns
 

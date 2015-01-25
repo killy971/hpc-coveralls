@@ -11,6 +11,7 @@
 
 module Trace.Hpc.Coveralls ( generateCoverallsFromTix ) where
 
+import           Control.Applicative
 import           Data.Aeson
 import           Data.Aeson.Types ()
 import           Data.Function
@@ -83,12 +84,14 @@ coverageToJson converter filePath (source, mix, tixs) = object [
           getExprSource' = getExprSource $ lines source
 
 toCoverallsJson :: String -> String -> Maybe String -> LixConverter -> TestSuiteCoverageData -> Value
-toCoverallsJson serviceName jobId repoToken converter testSuiteCoverageData = object [
-    "service_job_id" .= jobId,
-    "repo_token" .= repoToken,
-    "service_name" .= serviceName,
-    "source_files" .= toJsonCoverageList testSuiteCoverageData]
-    where toJsonCoverageList = map (uncurry $ coverageToJson converter) . M.toList
+toCoverallsJson serviceName jobId repoTokenM converter testSuiteCoverageData =
+    object $ mcons (("repo_token" .=) <$> repoTokenM) base
+    where base = [
+              "service_job_id" .= jobId,
+              "repo_token" .= repoTokenM,
+              "service_name" .= serviceName,
+              "source_files" .= toJsonCoverageList testSuiteCoverageData]
+          toJsonCoverageList = map (uncurry $ coverageToJson converter) . M.toList
 
 mergeModuleCoverageData :: ModuleCoverageData -> ModuleCoverageData -> ModuleCoverageData
 mergeModuleCoverageData (source, mix, tixs1) (_, _, tixs2) =
