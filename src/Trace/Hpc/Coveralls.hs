@@ -93,7 +93,7 @@ toCoverallsJson serviceName jobId repoTokenM gitInfo converter testSuiteCoverage
               "source_files" .= toJsonCoverageList testSuiteCoverageData]
           toJsonCoverageList = map (uncurry $ coverageToJson converter) . M.toList
           withRepoToken = mcons (("repo_token" .=) <$> repoTokenM) base
-          withGitInfo   = ("git" .= gitInfo):withRepoToken
+          withGitInfo   = ("git" .= gitInfo) : withRepoToken
 
 mergeModuleCoverageData :: ModuleCoverageData -> ModuleCoverageData -> ModuleCoverageData
 mergeModuleCoverageData (source, mix, tixs1) (_, _, tixs2) =

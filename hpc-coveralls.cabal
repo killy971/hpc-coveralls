@@ -51,6 +51,7 @@ library
     HpcCoverallsCmdLine,
     Trace.Hpc.Coveralls.Config,
     Trace.Hpc.Coveralls.Curl,
+    Trace.Hpc.Coveralls.GitInfo,
     Trace.Hpc.Coveralls.Paths
   build-depends:
     aeson,
