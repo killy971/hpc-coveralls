@@ -14,6 +14,7 @@ import           System.Exit (exitFailure, exitSuccess)
 import           Trace.Hpc.Coveralls
 import           Trace.Hpc.Coveralls.Config (Config(Config))
 import           Trace.Hpc.Coveralls.Curl
+import           Trace.Hpc.Coveralls.GitInfo (getGitInfo)
 import           Trace.Hpc.Coveralls.Util
 
 urlApiV1 :: String
@@ -47,7 +48,8 @@ main = do
         Nothing -> putStrLn "Please specify a target test suite name" >> exitSuccess
         Just config -> do
             (serviceName, jobId) <- getServiceAndJobID
-            coverallsJson <- generateCoverallsFromTix serviceName jobId config
+            gitInfo <- getGitInfo
+            coverallsJson <- generateCoverallsFromTix serviceName jobId gitInfo config
             when (displayReport hca) $ BSL.putStrLn $ encode coverallsJson
             let filePath = serviceName ++ "-" ++ jobId ++ ".json"
             writeJson filePath coverallsJson

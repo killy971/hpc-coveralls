@@ -19,6 +19,7 @@ import           Data.List
 import qualified Data.Map.Strict as M
 import           System.Exit (exitFailure)
 import           Trace.Hpc.Coveralls.Config
+import           Trace.Hpc.Coveralls.GitInfo (GitInfo)
 import           Trace.Hpc.Coveralls.Lix
 import           Trace.Hpc.Coveralls.Paths
 import           Trace.Hpc.Coveralls.Types
@@ -83,14 +84,16 @@ coverageToJson converter filePath (source, mix, tixs) = object [
           Mix _ _ _ _ mixEntries = mix
           getExprSource' = getExprSource $ lines source
 
-toCoverallsJson :: String -> String -> Maybe String -> LixConverter -> TestSuiteCoverageData -> Value
-toCoverallsJson serviceName jobId repoTokenM converter testSuiteCoverageData =
-    object $ mcons (("repo_token" .=) <$> repoTokenM) base
+toCoverallsJson :: String -> String -> Maybe String -> GitInfo -> LixConverter -> TestSuiteCoverageData -> Value
+toCoverallsJson serviceName jobId repoTokenM gitInfo converter testSuiteCoverageData =
+    object $ if serviceName == "travis-ci" then withRepoToken else withGitInfo
     where base = [
               "service_job_id" .= jobId,
               "service_name" .= serviceName,
               "source_files" .= toJsonCoverageList testSuiteCoverageData]
           toJsonCoverageList = map (uncurry $ coverageToJson converter) . M.toList
+          withRepoToken = mcons (("repo_token" .=) <$> repoTokenM) base
+          withGitInfo   = ("git" .= gitInfo):withRepoToken
 
 mergeModuleCoverageData :: ModuleCoverageData -> ModuleCoverageData -> ModuleCoverageData
 mergeModuleCoverageData (source, mix, tixs1) (_, _, tixs2) =
@@ -124,11 +127,12 @@ readCoverageData testSuiteName excludeDirPatterns = do
 -- | Generate coveralls json formatted code coverage from hpc coverage data
 generateCoverallsFromTix :: String   -- ^ CI name
                          -> String   -- ^ CI Job ID
+                         -> GitInfo  -- ^ Git repo information
                          -> Config   -- ^ hpc-coveralls configuration
                          -> IO Value -- ^ code coverage result in json format
-generateCoverallsFromTix serviceName jobId config = do
+generateCoverallsFromTix serviceName jobId gitInfo config = do
     testSuitesCoverages <- mapM (`readCoverageData` excludedDirPatterns) testSuiteNames
-    return $ toCoverallsJson serviceName jobId repoTokenM converter $ mergeCoverageData testSuitesCoverages
+    return $ toCoverallsJson serviceName jobId repoTokenM gitInfo converter $ mergeCoverageData testSuitesCoverages
     where excludedDirPatterns = excludedDirs config
           testSuiteNames = testSuites config
           repoTokenM = repoToken config
