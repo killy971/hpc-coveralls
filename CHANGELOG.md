@@ -1,3 +1,7 @@
+[0.8.3](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v0.8.3+is:closed)
+-----
+* Send git repository info when using other CI services than Travis (issue #37)
+
 [0.8.2](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v0.8.2+is:closed)
 -----
 * Add option to send repo token (issue #36)

@@ -1,5 +1,5 @@
 name:           hpc-coveralls
-version:        0.8.2
+version:        0.8.3
 synopsis:       Coveralls.io support for Haskell.
 description:
   This utility converts and sends Haskell projects hpc code coverage to
