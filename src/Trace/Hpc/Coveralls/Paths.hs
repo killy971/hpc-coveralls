@@ -7,7 +7,7 @@
 --
 -- Paths constants and functions for hpc coverage report output.
 
-module Trace.Hpc.Coveralls.Paths where
+module Trace.Hpc.Coveralls.Paths ( getMixPath, getTixPath ) where
 
 import Trace.Hpc.Tix
 
@@ -27,5 +27,5 @@ getMixPath testSuiteName tix = mixDir ++ dirName ++ "/"
               (packageId, _) -> packageId
           TixModule modName _ _ _ = tix
 
-getTixPath :: String -> IO FilePath
-getTixPath testSuiteName = return $ tixDir ++ testSuiteName ++ "/" ++ getTixFileName testSuiteName
+getTixPath :: String -> FilePath
+getTixPath testSuiteName = tixDir ++ testSuiteName ++ "/" ++ getTixFileName testSuiteName

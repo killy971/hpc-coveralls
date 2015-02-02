@@ -110,7 +110,7 @@ readCoverageData :: String                   -- ^ test suite name
                  -> [String]                 -- ^ excluded source folders
                  -> IO TestSuiteCoverageData -- ^ coverage data list
 readCoverageData testSuiteName excludeDirPatterns = do
-    tixPath <- getTixPath testSuiteName
+    let tixPath = getTixPath testSuiteName
     mtix <- readTix tixPath
     case mtix of
         Nothing -> error ("Couldn't find the file " ++ tixPath) >> exitFailure
