@@ -10,6 +10,7 @@
 -- Paths constants and functions for hpc coverage report output.
 
 module Trace.Hpc.Coveralls.Paths (
+    dumpDirectory,
     dumpDirectoryTree,
     getMixPath,
     getTixPath,
@@ -18,11 +19,12 @@ module Trace.Hpc.Coveralls.Paths (
 
 import Control.Monad
 import Data.Traversable (traverse)
-import System.Directory (doesDirectoryExist)
+import System.Directory (
+    doesDirectoryExist, getDirectoryContents
+    )
 import System.Directory.Tree (
     AnchoredDirTree(..), dirTree, readDirectoryWith
     )
-import System.Exit (exitFailure)
 import Trace.Hpc.Tix
 
 hpcDir :: FilePath
@@ -44,10 +46,22 @@ getMixPath testSuiteName tix = mixDir ++ dirName ++ "/"
 getTixPath :: String -> FilePath
 getTixPath testSuiteName = tixDir ++ testSuiteName ++ "/" ++ getTixFileName testSuiteName
 
-dumpDirectoryTree :: FilePath -> IO ()
+dumpDirectory :: FilePath -> IO ()
+dumpDirectory path = do
+    directoryExists <- doesDirectoryExist path
+    unless directoryExists $ putStrLn ("Couldn't find the directory " ++ path)
+    putStrLn ("Dumping " ++ path ++ " directory content:")
+    contents <- getDirectoryContents path
+    traverse putStrLn contents
+    return ()
+
+dumpDirectoryTree :: FilePath -> IO Bool
 dumpDirectoryTree path = do
     directoryExists <- doesDirectoryExist path
-    unless directoryExists $ putStrLn ("Couldn't find the directory " ++ path) >> exitFailure
-    tree <- readDirectoryWith return path
-    traverse putStrLn $ dirTree tree
-    return ()
+    if directoryExists
+        then do
+            putStrLn ("Dumping " ++ path ++ " directory tree:")
+            tree <- readDirectoryWith return path
+            traverse putStrLn $ dirTree tree
+            return True
+        else putStrLn ("Couldn't find the directory " ++ path) >> return False

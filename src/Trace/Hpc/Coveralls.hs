@@ -12,6 +12,7 @@
 module Trace.Hpc.Coveralls ( generateCoverallsFromTix ) where
 
 import           Control.Applicative
+import           Control.Monad
 import           Data.Aeson
 import           Data.Aeson.Types ()
 import           Data.Function
@@ -115,8 +116,8 @@ readCoverageData testSuiteName excludeDirPatterns = do
     case mtix of
         Nothing -> do
             putStrLn ("Couldn't find the file " ++ tixPath)
-            putStrLn "Dumping dist/hpc/ directory tree:"
-            dumpDirectoryTree hpcDir
+            foundHpcDir <- dumpDirectoryTree hpcDir
+            unless foundHpcDir $ dumpDirectory "dist/"
             putStrLn ("You can get support at " ++ gitterUrl) >> exitFailure
             where gitterUrl = "https://gitter.im/guillaume-nargeot/hpc-coveralls"
         Just (Tix tixs) -> do
