@@ -113,7 +113,10 @@ readCoverageData testSuiteName excludeDirPatterns = do
     let tixPath = getTixPath testSuiteName
     mtix <- readTix tixPath
     case mtix of
-        Nothing -> error ("Couldn't find the file " ++ tixPath) >> exitFailure
+        Nothing -> do
+            putStrLn ("Couldn't find the file " ++ tixPath)
+            putStrLn "Dumping dist/hpc/ directory tree:"
+            dumpDirectoryTree hpcDir >> exitFailure
         Just (Tix tixs) -> do
             mixs <- mapM (readMix' testSuiteName) tixs
             let files = map filePath mixs
