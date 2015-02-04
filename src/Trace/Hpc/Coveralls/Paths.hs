@@ -20,8 +20,7 @@ import Control.Monad
 import Data.Traversable (traverse)
 import System.Directory (doesDirectoryExist)
 import System.Directory.Tree (
-    AnchoredDirTree(..), DirTree(..),
-    dirTree, readDirectoryWith
+    AnchoredDirTree(..), dirTree, readDirectoryWith
     )
 import System.Exit (exitFailure)
 import Trace.Hpc.Tix

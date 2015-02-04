@@ -116,7 +116,9 @@ readCoverageData testSuiteName excludeDirPatterns = do
         Nothing -> do
             putStrLn ("Couldn't find the file " ++ tixPath)
             putStrLn "Dumping dist/hpc/ directory tree:"
-            dumpDirectoryTree hpcDir >> exitFailure
+            dumpDirectoryTree hpcDir
+            putStrLn ("You can get support at " ++ gitterUrl) >> exitFailure
+            where gitterUrl = "https://gitter.im/guillaume-nargeot/hpc-coveralls"
         Just (Tix tixs) -> do
             mixs <- mapM (readMix' testSuiteName) tixs
             let files = map filePath mixs
