@@ -46,8 +46,7 @@ getTixPath hpcDir testSuiteName = tixDir hpcDir ++ testSuiteName ++ "/" ++ getTi
 
 firstExistingDirectory :: [FilePath] -> IO (Maybe FilePath)
 firstExistingDirectory = fmap msum . mapM pathIfExist
-    where pathIfExist :: FilePath -> IO (Maybe FilePath)
-          pathIfExist path = do
+    where pathIfExist path = do
               pathExists <- doesDirectoryExist path
               return $ if pathExists then Just path else Nothing
 
