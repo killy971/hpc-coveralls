@@ -42,7 +42,7 @@ getMixPath hpcDir testSuiteName tix = mixDir hpcDir ++ dirName ++ "/"
           TixModule modName _ _ _ = tix
 
 getTixPath :: String -> String -> FilePath
-getTixPath hpcDir testSuiteName = (tixDir hpcDir) ++ testSuiteName ++ "/" ++ getTixFileName testSuiteName
+getTixPath hpcDir testSuiteName = tixDir hpcDir ++ testSuiteName ++ "/" ++ getTixFileName testSuiteName
 
 firstExistingDirectory :: [FilePath] -> IO (Maybe FilePath)
 firstExistingDirectory = fmap msum . mapM pathIfExist
