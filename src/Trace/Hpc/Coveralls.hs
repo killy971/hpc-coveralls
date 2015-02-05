@@ -12,12 +12,10 @@
 module Trace.Hpc.Coveralls ( generateCoverallsFromTix ) where
 
 import           Control.Applicative
-import           Control.Monad
 import           Data.Aeson
 import           Data.Aeson.Types ()
 import           Data.Function
 import           Data.List
-import           Data.Maybe
 import qualified Data.Map.Strict as M
 import           System.Exit (exitFailure)
 import           Trace.Hpc.Coveralls.Config
@@ -135,16 +133,18 @@ generateCoverallsFromTix :: String   -- ^ CI name
                          -> IO Value -- ^ code coverage result in json format
 generateCoverallsFromTix serviceName jobId gitInfo config = do
     mHpcDir <- firstExistingDirectory hpcDirs
-    unless (isJust mHpcDir) $ putStrLn "Couldn't find the hpc data directory" >> dumpDirectory distDir >> ioFailure
-    let hpcDir = fromJust mHpcDir
-    testSuitesCoverages <- mapM (readCoverageData hpcDir excludedDirPatterns) testSuiteNames
-    return $ toCoverallsJson serviceName jobId repoTokenM gitInfo converter $ mergeCoverageData testSuitesCoverages
-    where excludedDirPatterns = excludedDirs config
-          testSuiteNames = testSuites config
-          repoTokenM = repoToken config
-          converter = case coverageMode config of
-              StrictlyFullLines -> strictConverter
-              AllowPartialLines -> looseConverter
+    case mHpcDir of
+        Nothing -> putStrLn "Couldn't find the hpc data directory" >> dumpDirectory distDir >> ioFailure
+        Just hpcDir -> do
+            testSuitesCoverages <- mapM (readCoverageData hpcDir excludedDirPatterns) testSuiteNames
+            let coverageData = mergeCoverageData testSuitesCoverages
+            return $ toCoverallsJson serviceName jobId repoTokenM gitInfo converter coverageData
+            where excludedDirPatterns = excludedDirs config
+                  testSuiteNames = testSuites config
+                  repoTokenM = repoToken config
+                  converter = case coverageMode config of
+                      StrictlyFullLines -> strictConverter
+                      AllowPartialLines -> looseConverter
 
 ioFailure :: IO a
 ioFailure = putStrLn ("You can get support at " ++ gitterUrl) >> exitFailure
