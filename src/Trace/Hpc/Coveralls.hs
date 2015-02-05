@@ -17,6 +17,7 @@ import           Data.Aeson
 import           Data.Aeson.Types ()
 import           Data.Function
 import           Data.List
+import           Data.Maybe
 import qualified Data.Map.Strict as M
 import           System.Exit (exitFailure)
 import           Trace.Hpc.Coveralls.Config
@@ -103,25 +104,21 @@ mergeModuleCoverageData (source, mix, tixs1) (_, _, tixs2) =
 mergeCoverageData :: [TestSuiteCoverageData] -> TestSuiteCoverageData
 mergeCoverageData = foldr1 (M.unionWith mergeModuleCoverageData)
 
-readMix' :: String -> TixModule -> IO Mix
-readMix' name tix = readMix [getMixPath name tix] (Right tix)
+readMix' :: String -> String -> TixModule -> IO Mix
+readMix' hpcDir name tix = readMix [getMixPath hpcDir name tix] (Right tix)
 
 -- | Create a list of coverage data from the tix input
-readCoverageData :: String                   -- ^ test suite name
+readCoverageData :: String                   -- ^ hpc data directory
                  -> [String]                 -- ^ excluded source folders
+                 -> String                   -- ^ test suite name
                  -> IO TestSuiteCoverageData -- ^ coverage data list
-readCoverageData testSuiteName excludeDirPatterns = do
-    let tixPath = getTixPath testSuiteName
-    mtix <- readTix tixPath
-    case mtix of
-        Nothing -> do
-            putStrLn ("Couldn't find the file " ++ tixPath)
-            foundHpcDir <- dumpDirectoryTree hpcDir
-            unless foundHpcDir $ dumpDirectory "dist/"
-            putStrLn ("You can get support at " ++ gitterUrl) >> exitFailure
-            where gitterUrl = "https://gitter.im/guillaume-nargeot/hpc-coveralls"
+readCoverageData hpcDir excludeDirPatterns testSuiteName = do
+    let tixPath = getTixPath hpcDir testSuiteName
+    mTix <- readTix tixPath
+    case mTix of
+        Nothing -> putStrLn ("Couldn't find the file " ++ tixPath) >> dumpDirectoryTree hpcDir >> ioFailure
         Just (Tix tixs) -> do
-            mixs <- mapM (readMix' testSuiteName) tixs
+            mixs <- mapM (readMix' hpcDir testSuiteName) tixs
             let files = map filePath mixs
             sources <- mapM readFile files
             let coverageDataList = zip4 files sources mixs (map tixModuleTixs tixs)
@@ -137,7 +134,10 @@ generateCoverallsFromTix :: String   -- ^ CI name
                          -> Config   -- ^ hpc-coveralls configuration
                          -> IO Value -- ^ code coverage result in json format
 generateCoverallsFromTix serviceName jobId gitInfo config = do
-    testSuitesCoverages <- mapM (`readCoverageData` excludedDirPatterns) testSuiteNames
+    mHpcDir <- firstExistingDirectory hpcDirs
+    unless (isJust mHpcDir) $ putStrLn "Couldn't find the hpc data directory" >> dumpDirectory distDir >> ioFailure
+    let hpcDir = fromJust mHpcDir
+    testSuitesCoverages <- mapM (readCoverageData hpcDir excludedDirPatterns) testSuiteNames
     return $ toCoverallsJson serviceName jobId repoTokenM gitInfo converter $ mergeCoverageData testSuitesCoverages
     where excludedDirPatterns = excludedDirs config
           testSuiteNames = testSuites config
@@ -145,3 +145,7 @@ generateCoverallsFromTix serviceName jobId gitInfo config = do
           converter = case coverageMode config of
               StrictlyFullLines -> strictConverter
               AllowPartialLines -> looseConverter
+
+ioFailure :: IO a
+ioFailure = putStrLn ("You can get support at " ++ gitterUrl) >> exitFailure
+    where gitterUrl = "https://gitter.im/guillaume-nargeot/hpc-coveralls" :: String
