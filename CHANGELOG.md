@@ -1,3 +1,8 @@
+[0.8.4](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v0.8.4+is:closed)
+-----
+* Fix instructions and target hpc data directory for Cabal 1.22 / GHC 7.10 (issue #38)
+* Print hpc coverage data directory tree when failing to read tix file (issue #39)
+
 [0.8.3](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v0.8.3+is:closed)
 -----
 * Send git repository info when using other CI services than Travis (issue #37)
