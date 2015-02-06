@@ -24,7 +24,7 @@ after_script:
   - hpc-coveralls [options] [test-suite-names]
 ```
 
-When using Cabal 1.22 or a newer version, replace the `--enable-library-coverage` flag by `--enable-coverage`.
+When building with Cabal 1.22 or a newer version, use the `--enable-coverage` flag instead of `--enable-library-coverage`.
 
 If the build fails during the test phase with an error message starting by "hpc:", just replace the `cabal test` command by `run-cabal-test`, as in the following example:
 ```yaml
