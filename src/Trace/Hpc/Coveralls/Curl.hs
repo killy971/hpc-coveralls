@@ -26,10 +26,10 @@ import           Trace.Hpc.Coveralls.Types
 
 parseResponse :: CurlResponse -> PostResult
 parseResponse r = case mError of
-    Just True -> PostFailure $ fromMaybe ("Error message not found. " ++ responseDump) mMessage
+    Just True -> PostFailure $ fromMaybe ("error message not found. " ++ responseDump) mMessage
     _         -> case respCurlCode r of
-        CurlOK      -> maybe (PostFailure $ "No url found. " ++ responseDump) PostSuccess mUrl
-        _           -> PostFailure $ "Curl failure. " ++ responseDump
+        CurlOK      -> maybe (PostFailure $ "no url found. " ++ responseDump) PostSuccess mUrl
+        _           -> PostFailure $ "curl failure. " ++ responseDump
     where mUrl     = mGetField "url"
           mMessage = mGetField "message"
           mError   = mGetField "error"

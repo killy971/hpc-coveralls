@@ -10,7 +10,7 @@ import           Data.Maybe hiding (listToMaybe)
 import           HpcCoverallsCmdLine
 import           System.Console.CmdArgs
 import           System.Environment (getEnv, getEnvironment)
-import           System.Exit (exitFailure, exitSuccess)
+import           System.Exit (exitFailure)
 import           Trace.Hpc.Coveralls
 import           Trace.Hpc.Coveralls.Config (Config(Config))
 import           Trace.Hpc.Coveralls.Curl
@@ -45,7 +45,7 @@ main :: IO ()
 main = do
     hca <- cmdArgs hpcCoverallsArgs
     case getConfig hca of
-        Nothing -> putStrLn "Please specify a target test suite name" >> exitSuccess
+        Nothing -> putStrLn "Please specify a target test suite name"
         Just config -> do
             (serviceName, jobId) <- getServiceAndJobID
             gitInfo <- getGitInfo
@@ -62,6 +62,6 @@ main = do
                         threadDelay (10 * 1000 * 1000)
                         coverageResult <- readCoverageResult url (printResponse hca)
                         case coverageResult of
-                            Just totalCoverage -> putStrLn ("Coverage: " ++ totalCoverage) >> exitSuccess
-                            Nothing -> putStrLn "Failed to read total coverage" >> exitSuccess
+                            Just totalCoverage -> putStrLn ("Coverage: " ++ totalCoverage)
+                            Nothing -> putStrLn "Failed to read total coverage"
                     PostFailure msg -> putStrLn ("Error: " ++ msg) >> exitFailure
