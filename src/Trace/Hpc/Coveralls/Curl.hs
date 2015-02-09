@@ -25,13 +25,18 @@ import           Safe
 import           Trace.Hpc.Coveralls.Types
 
 parseResponse :: CurlResponse -> PostResult
-parseResponse r = case respCurlCode r of
-    CurlOK -> PostSuccess $ getField "url"
-    _      -> PostFailure $ getField "message"
-    where getField fieldName = fromJust $ mGetField fieldName
+parseResponse r = case mError of
+    Just True -> PostFailure $ fromMaybe ("Error message not found. " ++ responseDump) mMessage
+    _         -> case respCurlCode r of
+        CurlOK      -> maybe (PostFailure $ "No url found. " ++ responseDump) PostSuccess mUrl
+        _           -> PostFailure $ "Curl failure. " ++ responseDump
+    where mUrl     = mGetField "url"
+          mMessage = mGetField "message"
+          mError   = mGetField "error"
           mGetField fieldName = do
               result <- decode $ LBS.pack (respBody r)
               parseMaybe (.: fieldName) result
+          responseDump = "CurlCode: " ++ (show $ respCurlCode r) ++ ", Body: " ++ (show $ respBody r)
 
 httpPost :: String -> [HttpPost]
 httpPost path = [HttpPost "json_file" Nothing (ContentFile path) [] Nothing]
@@ -52,7 +57,8 @@ postJson path url printResponse = do
 
 -- | Exponential retry policy of 10 seconds initial delay, up to 5 times
 expRetryPolicy :: RetryPolicy
-expRetryPolicy = exponentialBackoff (10 * 1000 * 1000) <> limitRetries 3
+expRetryPolicy = exponentialBackoff tenSecondsInMicroSeconds <> limitRetries 3
+    where tenSecondsInMicroSeconds = 10 * 1000 * 1000
 
 performWithRetry :: IO (Maybe a) -> IO (Maybe a)
 performWithRetry = retrying expRetryPolicy isNothingM
