@@ -10,31 +10,31 @@ before_install:
   - export PATH=/opt/ghc/$GHCVER/bin:$PATH
 
 install:
-  - cabal-$CABAL_VER update
-  - travis_retry sudo apt-get -q -y install hlint || cabal-$CABAL_VER install hlint
-  - cabal-$CABAL_VER install --only-dependencies --enable-tests --enable-benchmarks
+  - cabal-$CABALVER update
+  - travis_retry sudo apt-get -q -y install hlint || cabal-$CABALVER install hlint
+  - cabal-$CABALVER install --only-dependencies --enable-tests --enable-benchmarks
 
 script:
   - hlint . --ignore="Parse error"
   - |
     if [ $CABALVER = "1.20" ]; then
-      cabal-$CABAL_VER configure --enable-tests --enable-benchmarks --enable-library-coverage -v2
+      cabal-$CABALVER configure --enable-tests --enable-benchmarks --enable-library-coverage -v2
     else
-      cabal-$CABAL_VER configure --enable-tests --enable-benchmarks --enable-coverage -v2
+      cabal-$CABALVER configure --enable-tests --enable-benchmarks --enable-coverage -v2
     fi
-  - cabal-$CABAL_VER build
+  - cabal-$CABALVER build
   - |
     if [ $GHCVER = "7.6.3" ]; then
-      dist/build/run-cabal-test/run-cabal-test --cabal-name=cabal-$CABAL_VER --show-details=always
+      dist/build/run-cabal-test/run-cabal-test --cabal-name=cabal-$CABALVER --show-details=always
     else
-      cabal-$CABAL_VER test --show-details=always
+      cabal-$CABALVER test --show-details=always
     fi
-  - cabal-$CABAL_VER check
-  - cabal-$CABAL_VER sdist
-  - export SRC_TGZ=$(cabal-$CABAL_VER info . | awk '{print $2 ".tar.gz";exit}') ;
+  - cabal-$CABALVER check
+  - cabal-$CABALVER sdist
+  - export SRC_TGZ=$(cabal-$CABALVER info . | awk '{print $2 ".tar.gz";exit}') ;
     (cd dist/;
     if [ -f "$SRC_TGZ" ]; then
-      cabal-$CABAL_VER install "$SRC_TGZ";
+      cabal-$CABALVER install "$SRC_TGZ";
     else
       echo "expected '$SRC_TGZ' not found";
       exit 1;
