@@ -64,4 +64,8 @@ main = do
                         case coverageResult of
                             Just totalCoverage -> putStrLn ("Coverage: " ++ totalCoverage)
                             Nothing -> putStrLn "Failed to read total coverage"
-                    PostFailure msg -> putStrLn ("Error: " ++ msg) >> exitFailure
+                    PostFailure msg -> do
+                        putStrLn ("Error: " ++ msg)
+                        putStrLn ("You can get support at " ++ gitterUrl)
+                        exitFailure
+                        where gitterUrl = "https://gitter.im/guillaume-nargeot/hpc-coveralls"
