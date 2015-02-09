@@ -36,7 +36,7 @@ parseResponse r = case mError of
           mGetField fieldName = do
               result <- decode $ LBS.pack (respBody r)
               parseMaybe (.: fieldName) result
-          responseDump = "CurlCode: " ++ (show $ respCurlCode r) ++ ", Body: " ++ (show $ respBody r)
+          responseDump = "CurlCode: " ++ show (respCurlCode r) ++ ", Body: " ++ show (respBody r)
 
 httpPost :: String -> [HttpPost]
 httpPost path = [HttpPost "json_file" Nothing (ContentFile path) [] Nothing]
