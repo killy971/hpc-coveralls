@@ -42,6 +42,8 @@ script:
 
 after_script:
   - tree dist/hpc/vanilla/
+  - cat dist/hpc/vanilla/tix/hpc-coveralls-0.8.4/hpc-coveralls-0.8.4.tix
+  - cat dist/hpc/vanilla/tix/test-all/test-all.tix
   - dist/build/hpc-coveralls/hpc-coveralls test-all --exclude-dir=test --display-report
 
 notifications:
