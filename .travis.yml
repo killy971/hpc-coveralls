@@ -6,7 +6,7 @@ env:
 before_install:
   - travis_retry sudo add-apt-repository -y ppa:hvr/ghc
   - travis_retry sudo apt-get update
-  - travis_retry sudo apt-get install cabal-install-$CABALVER ghc-$GHCVER happy
+  - travis_retry sudo apt-get install cabal-install-$CABALVER ghc-$GHCVER happy tree
   - export PATH=/opt/ghc/$GHCVER/bin:$PATH
 
 install:
@@ -41,6 +41,7 @@ script:
     fi)
 
 after_script:
+  - tree dist/hpc/vanilla/
   - dist/build/hpc-coveralls/hpc-coveralls test-all --exclude-dir=test --display-report
 
 notifications:
