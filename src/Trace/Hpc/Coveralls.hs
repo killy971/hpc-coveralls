@@ -103,7 +103,10 @@ mergeCoverageData :: [TestSuiteCoverageData] -> TestSuiteCoverageData
 mergeCoverageData = foldr1 (M.unionWith mergeModuleCoverageData)
 
 readMix' :: String -> String -> TixModule -> IO Mix
-readMix' hpcDir name tix = readMix [getMixPath hpcDir name tix] (Right tix)
+readMix' hpcDir name tix = do
+    putStrLn $ "mixPath: " ++ mixPath
+    readMix [mixPath] (Right tix)
+    where mixPath = getMixPath hpcDir name tix
 
 -- | Create a list of coverage data from the tix input
 readCoverageData :: String                   -- ^ hpc data directory
