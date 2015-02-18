@@ -14,6 +14,8 @@ module Trace.Hpc.Coveralls ( generateCoverallsFromTix ) where
 import           Control.Applicative
 import           Data.Aeson
 import           Data.Aeson.Types ()
+import qualified Data.ByteString.Lazy.Char8 as LBS
+import           Data.Digest.Pure.MD5
 import           Data.Function
 import           Data.List
 import qualified Data.Map.Strict as M
@@ -75,7 +77,7 @@ groupMixEntryTixs = map mergeOnLst3 . groupBy ((==) `on` fst . fst3)
 coverageToJson :: LixConverter -> FilePath -> ModuleCoverageData -> Value
 coverageToJson converter filePath (source, mix, tixs) = object [
     "name" .= filePath,
-    "source" .= source,
+    "source_digest" .= (show . md5 . LBS.pack) source,
     "coverage" .= coverage]
     where coverage = toSimpleCoverage converter lineCount mixEntriesTixs
           lineCount = length $ lines source
