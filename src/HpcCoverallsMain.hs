@@ -39,7 +39,7 @@ writeJson :: String -> Value -> IO ()
 writeJson filePath = BSL.writeFile filePath . encode
 
 getConfig :: HpcCoverallsArgs -> Maybe Config
-getConfig hca = Config (excludeDirs hca) (coverageMode hca) (repoToken hca) <$> listToMaybe (testSuites hca)
+getConfig hca = Config (optExcludeDirs hca) (optCoverageMode hca) (optRepoToken hca) <$> listToMaybe (argTestSuites hca)
 
 main :: IO ()
 main = do
@@ -50,17 +50,17 @@ main = do
             (serviceName, jobId) <- getServiceAndJobID
             gitInfo <- getGitInfo
             coverallsJson <- generateCoverallsFromTix serviceName jobId gitInfo config
-            when (displayReport hca) $ BSL.putStrLn $ encode coverallsJson
+            when (optDisplayReport hca) $ BSL.putStrLn $ encode coverallsJson
             let filePath = serviceName ++ "-" ++ jobId ++ ".json"
             writeJson filePath coverallsJson
-            unless (dontSend hca) $ do
-                response <- postJson filePath urlApiV1 (printResponse hca)
+            unless (optDontSend hca) $ do
+                response <- postJson filePath urlApiV1 (optCurlVerbose hca)
                 case response of
                     PostSuccess url -> do
                         putStrLn ("URL: " ++ url)
                         -- wait 10 seconds until the page is available
                         threadDelay (10 * 1000 * 1000)
-                        coverageResult <- readCoverageResult url (printResponse hca)
+                        coverageResult <- readCoverageResult url (optCurlVerbose hca)
                         case coverageResult of
                             Just totalCoverage -> putStrLn ("Coverage: " ++ totalCoverage)
                             Nothing -> putStrLn "Failed to read total coverage"

@@ -133,9 +133,9 @@ This boolean option prevents hpc-coveralls from sending the coverage report to c
 This option can be used together with `--display-report` for testing purpose.<br/>
 For example, you can try various combinations of the other options and confirm the difference in the resulting report outputs.
 
-#### --print-response
+#### --curl-verbose
 
-This boolean option prints the raw json response received after posting the coverage report to coveralls.io.
+This boolean option enables curl verbose mode and prints the raw json response received after posting the coverage report to coveralls.io.
 
 # Limitations
 

@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS_GHC -fno-warn-unused-do-bind #-}
 
 -- |
 -- Module:      Trace.Hpc.Coveralls.Curl
@@ -46,13 +45,13 @@ postJson :: String        -- ^ target file
          -> URLString     -- ^ target url
          -> Bool          -- ^ print json response if true
          -> IO PostResult -- ^ POST request result
-postJson path url printResponse = do
+postJson path url curlVerbose = do
     h <- initialize
-    setopt h (CurlVerbose True)
-    setopt h (CurlURL url)
-    setopt h (CurlHttpPost $ httpPost path)
+    void $ setopt h (CurlVerbose curlVerbose)
+    void $ setopt h (CurlURL url)
+    void $ setopt h (CurlHttpPost $ httpPost path)
     r <- perform_with_response_ h
-    when printResponse $ putStrLn $ respBody r
+    when curlVerbose $ putStrLn $ respBody r
     return $ parseResponse r
 
 -- | Exponential retry policy of 10 seconds initial delay, up to 5 times
@@ -76,14 +75,15 @@ extractCoverage body = splitOn "<" <$> splitOn prefix body `atMay` 1 >>= headMay
 readCoverageResult :: URLString         -- ^ target url
                    -> Bool              -- ^ print json response if true
                    -> IO (Maybe String) -- ^ coverage result
-readCoverageResult url printResponse =
+readCoverageResult url curlVerbose =
     performWithRetry readAction
     where readAction = do
               response <- curlGetString url curlOptions
-              when printResponse $ putStrLn $ snd response
+              when curlVerbose $ putStrLn $ snd response
               return $ case response of
                   (CurlOK, body) -> extractCoverage body
                   _ -> Nothing
               where curlOptions = [
+                        CurlVerbose curlVerbose,
                         CurlTimeout 60,
                         CurlConnectTimeout 60]
