@@ -4,6 +4,7 @@
 * Print hpc coverage data directory tree when failing to read tix file (issue #39)
 * Improve handling of coveralls response reading/parsing (issue #41)
 * Send "source digest" instead of "source" (issue #43)
+* Add --curl-verbose flag to enable curl verbose mode and replace --print-respons (issue #42)
 
 [0.8.3](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v0.8.3+is:closed)
 -----
