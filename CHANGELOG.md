@@ -1,7 +1,9 @@
-[0.8.4](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v0.8.4+is:closed)
+[0.9.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v0.9.0+is:closed)
 -----
 * Fix instructions and target hpc data directory for Cabal 1.22 / GHC 7.10 (issue #38)
 * Print hpc coverage data directory tree when failing to read tix file (issue #39)
+* Improve handling of coveralls response reading/parsing (issue #41)
+* Send "source digest" instead of "source" (issue #43)
 
 [0.8.3](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v0.8.3+is:closed)
 -----
@@ -26,7 +28,7 @@
 
 [0.6.1](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=8&state=closed)
 -----
-* Safer implementation of the result coverage value retrieval from coveralls.io (issue 25)
+* Safer implementation of the result coverage value retrieval from coveralls.io (issue #25)
 * Set the delay before retrieving the result to 10 seconds (issue #26)
 
 [0.6.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?milestone=7&state=closed)
