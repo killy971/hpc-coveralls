@@ -54,7 +54,7 @@ library
     Trace.Hpc.Coveralls.GitInfo,
     Trace.Hpc.Coveralls.Paths
   build-depends:
-    aeson,
+    aeson >= 0.7.1,
     base >= 4 && < 5,
     bytestring >= 0.10,
     containers >= 0.5,
@@ -73,7 +73,7 @@ executable hpc-coveralls
   hs-source-dirs: src
   main-is:        HpcCoverallsMain.hs
   build-depends:
-    aeson,
+    aeson >= 0.7.1,
     base >= 4 && < 5,
     bytestring >= 0.10,
     containers >= 0.5,
