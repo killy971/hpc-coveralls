@@ -36,4 +36,4 @@ getPackageNameVersion file = do
             let pkg = package . packageDescription $ gpd
                 PackageName name = pkgName pkg
                 version = pkgVersion pkg
-            return $ Just $ name ++ "-" ++ (show version)
+            return $ Just $ name ++ "-" ++ show version
