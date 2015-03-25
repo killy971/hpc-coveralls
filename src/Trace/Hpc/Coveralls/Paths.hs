@@ -12,7 +12,6 @@
 module Trace.Hpc.Coveralls.Paths where
 
 import Control.Monad
--- import Data.Foldable
 import Data.Traversable (traverse)
 import System.Directory (
     doesDirectoryExist, getDirectoryContents
