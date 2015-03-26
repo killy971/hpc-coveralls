@@ -69,7 +69,8 @@ library
     pureMD5 >= 2.1,
     retry >= 0.5,
     safe >= 0.3,
-    split
+    split,
+    transformers >= 0.4.3
 
 executable hpc-coveralls
   hs-source-dirs: src
@@ -89,7 +90,8 @@ executable hpc-coveralls
     pureMD5 >= 2.1,
     retry >= 0.5,
     safe >= 0.3,
-    split
+    split,
+    transformers >= 0.4.3
   ghc-options:    -Wall -fwarn-tabs -fwarn-incomplete-uni-patterns
 
 executable run-cabal-test

@@ -7,10 +7,11 @@
 --
 -- Functions for reading the cabal package name and version.
 
-module Trace.Hpc.Coveralls.Cabal where
+module Trace.Hpc.Coveralls.Cabal (packageNameVersion) where
 
 import Control.Applicative
 import Control.Monad
+import Control.Monad.Trans.Maybe
 import Data.List (intercalate, isSuffixOf)
 import Distribution.Package
 import Distribution.PackageDescription
@@ -18,9 +19,9 @@ import Distribution.PackageDescription.Parse
 import Distribution.Version
 import System.Directory
 
-getCabalFile :: IO (Maybe FilePath)
-getCabalFile = do
-    cnts <- (filter isCabal <$> getDirectoryContents ".") >>= filterM doesFileExist
+getCabalFile :: FilePath -> IO (Maybe FilePath)
+getCabalFile dir = do
+    cnts <- (filter isCabal <$> getDirectoryContents dir) >>= filterM doesFileExist
     case cnts of
         [file] -> return $ Just file
         _ -> return Nothing
@@ -37,3 +38,8 @@ getPackageNameVersion file = do
                    PackageName name = pkgName pkg
                    version = showVersion (pkgVersion pkg)
                    showVersion = intercalate "." . map show . versionBranch
+
+packageNameVersion :: IO (Maybe String)
+packageNameVersion = runMaybeT $ pkgNameVersion currentDir
+    where pkgNameVersion = MaybeT . getPackageNameVersion <=< MaybeT . getCabalFile
+          currentDir = "."
