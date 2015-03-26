@@ -32,12 +32,11 @@ getPackageNameVersion file = do
     orig <- readFile file
     case parsePackageDescription orig of
         ParseFailed _ -> return Nothing
-        ParseOk _warnings gpd -> do
-             return $ Just $ name ++ "-" ++ version
-             where pkg = package . packageDescription $ gpd
-                   PackageName name = pkgName pkg
-                   version = showVersion (pkgVersion pkg)
-                   showVersion = intercalate "." . map show . versionBranch
+        ParseOk _warnings gpd -> return $ Just $ name ++ "-" ++ version
+            where pkg = package . packageDescription $ gpd
+                  PackageName name = pkgName pkg
+                  version = showVersion (pkgVersion pkg)
+                  showVersion = intercalate "." . map show . versionBranch
 
 packageNameVersion :: IO (Maybe String)
 packageNameVersion = runMaybeT $ pkgNameVersion currentDir
