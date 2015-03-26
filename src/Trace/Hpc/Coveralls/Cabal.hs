@@ -14,7 +14,6 @@ import Control.Monad
 import Data.List (intercalate, isSuffixOf)
 import Distribution.Package
 import Distribution.PackageDescription
-import Distribution.PackageDescription.Configuration
 import Distribution.PackageDescription.Parse
 import Distribution.Version
 import System.Directory
@@ -36,5 +35,5 @@ getPackageNameVersion file = do
              return $ Just $ name ++ "-" ++ version
              where pkg = package . packageDescription $ gpd
                    PackageName name = pkgName pkg
-                   version = simpleVersion (pkgVersion pkg)
-                   simpleVersion = intercalate "." . map show . versionBranch
+                   version = showVersion (pkgVersion pkg)
+                   showVersion = intercalate "." . map show . versionBranch
