@@ -13,7 +13,7 @@ import           System.Environment (getEnv, getEnvironment)
 import           System.Exit (exitFailure)
 import           Trace.Hpc.Coveralls
 import           Trace.Hpc.Coveralls.Cabal
-import           Trace.Hpc.Coveralls.Config (Config(Config), cabalFile)
+import           Trace.Hpc.Coveralls.Config (Config(Config, cabalFile, serviceName))
 import           Trace.Hpc.Coveralls.Curl
 import           Trace.Hpc.Coveralls.GitInfo (getGitInfo)
 import           Trace.Hpc.Coveralls.Util
@@ -44,6 +44,7 @@ getConfig hca = Config
     (optExcludeDirs hca)
     (optCoverageMode hca)
     (optCabalFile hca)
+    (optServiceName hca)
     (optRepoToken hca)
     <$> listToMaybe (argTestSuites hca)
 
@@ -53,14 +54,16 @@ main = do
     case getConfig hca of
         Nothing -> putStrLn "Please specify a target test suite name"
         Just config -> do
-            (serviceName, jobId) <- getServiceAndJobID
+            (defaultServiceName, jobId) <- getServiceAndJobID
+            let sn = fromMaybe defaultServiceName (serviceName config)
+            gitInfo <- getGitInfo
             mPkgNameVer <- case cabalFile config of
                 Just cabalFilePath -> getPackageNameVersion cabalFilePath
                 Nothing -> currDirPkgNameVer
             gitInfo <- getGitInfo
-            coverallsJson <- generateCoverallsFromTix serviceName jobId gitInfo config mPkgNameVer
+            coverallsJson <- generateCoverallsFromTix sn jobId gitInfo config mPkgNameVer
             when (optDisplayReport hca) $ BSL.putStrLn $ encode coverallsJson
-            let filePath = serviceName ++ "-" ++ jobId ++ ".json"
+            let filePath = sn ++ "-" ++ jobId ++ ".json"
             writeJson filePath coverallsJson
             unless (optDontSend hca) $ do
                 response <- postJson filePath urlApiV1 (optCurlVerbose hca)

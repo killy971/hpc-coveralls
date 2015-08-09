@@ -6,6 +6,7 @@ data Config = Config {
     excludedDirs :: ![FilePath],
     coverageMode :: !CoverageMode,
     cabalFile    :: !(Maybe FilePath),
+    serviceName  :: !(Maybe String),
     repoToken    :: !(Maybe String),
     testSuites   :: ![String]
     }

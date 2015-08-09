@@ -12,6 +12,7 @@ data HpcCoverallsArgs = CmdMain
     { optExcludeDirs   :: [String]
     , argTestSuites    :: [String]
     , optCabalFile     :: Maybe String
+    , optServiceName   :: Maybe String
     , optRepoToken     :: Maybe String
     , optDisplayReport :: Bool
     , optCurlVerbose   :: Bool
@@ -27,6 +28,7 @@ hpcCoverallsArgs = CmdMain
     , optDontSend      = False             &= explicit                &= name "dont-send"      &= help "Do not send the report to coveralls.io"
     , optCoverageMode  = AllowPartialLines &= explicit &= typ "MODE"  &= name "coverage-mode"  &= help "Coverage conversion mode: AllowPartialLines (default), StrictlyFullLines"
     , optCabalFile     = Nothing           &= explicit &= typ "FILE"  &= name "cabal-file"     &= help "Cabal file (ex.: module-name.cabal)"
+    , optServiceName   = Nothing           &= explicit &= typ "TOKEN" &= name "service-name"   &= help "service-name (e.g. travis-pro)"
     , optRepoToken     = Nothing           &= explicit &= typ "TOKEN" &= name "repo-token"     &= help "Coveralls repo token"
     , argTestSuites    = []                &= typ "TEST-SUITES" &= args
     } &= summary ("hpc-coveralls-" ++ versionString version ++ ", (C) Guillaume Nargeot 2014-2015")
