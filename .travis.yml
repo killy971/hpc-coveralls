@@ -41,6 +41,7 @@ script:
     fi)
 
 after_script:
+  - echo $PATH
   - dist/build/hpc-coveralls/hpc-coveralls test-all --exclude-dir=test --display-report
 
 notifications:
