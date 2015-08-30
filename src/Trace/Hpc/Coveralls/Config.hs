@@ -5,6 +5,7 @@ import Trace.Hpc.Coveralls.Types (CoverageMode)
 data Config = Config {
     excludedDirs :: ![FilePath],
     coverageMode :: !CoverageMode,
+    cabalFile    :: !(Maybe FilePath),
     repoToken    :: !(Maybe String),
     testSuites   :: ![String]
     }

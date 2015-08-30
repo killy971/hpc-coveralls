@@ -137,6 +137,12 @@ For example, you can try various combinations of the other options and confirm t
 
 This boolean option enables curl verbose mode and prints the raw json response received after posting the coverage report to coveralls.io.
 
+#### --cabal-file
+
+Use this option to specify the cabal file of the coverage report target package.
+This might be required in some cases, especially when building with cabal >= 1.22 and ghc >= 7.10, although hpc-coveralls assumes the package cabal file to be the unique file of extension ".cabal" in the current directory if it exists.
+For further details check [this issue](https://github.com/guillaume-nargeot/hpc-coveralls/issues/44).
+
 # Limitations
 
 Because of the way hpc works, coverage data is only generated for modules that are referenced directly or indirectly by the test suites.

@@ -5,3 +5,4 @@ dist/
 *.ps
 *.prof
 *.json
+*.local

@@ -12,6 +12,7 @@
 module Trace.Hpc.Coveralls.Paths where
 
 import Control.Monad
+import Data.Maybe
 import Data.Traversable (traverse)
 import System.Directory (
     doesDirectoryExist, getDirectoryContents
@@ -33,11 +34,15 @@ tixDir = (++ "tix/")
 mixDir :: String -> FilePath
 mixDir = (++ "mix/")
 
-getMixPath :: String -> String -> TixModule -> FilePath
-getMixPath hpcDir testSuiteName tix = mixDir hpcDir ++ dirName ++ "/"
+getMixPath :: Maybe String -- ^ target package name-version
+           -> String       -- ^ hpc output base directory
+           -> String       -- ^ test suite name
+           -> TixModule    -- ^ tix module
+           -> FilePath     -- ^ mix file patch
+getMixPath mPkgNameVer hpcDir testSuiteName tix = mixDir hpcDir ++ dirName ++ "/"
     where dirName = case span (/= '/') modName of
               (_, []) -> testSuiteName
-              (packageId, _) -> packageId
+              (packageId, _) -> fromMaybe packageId mPkgNameVer
           TixModule modName _ _ _ = tix
 
 getTixPath :: String -> String -> FilePath
