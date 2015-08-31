@@ -105,7 +105,8 @@ mergeCoverageData :: [TestSuiteCoverageData] -> TestSuiteCoverageData
 mergeCoverageData = foldr1 (M.unionWith mergeModuleCoverageData)
 
 readMix' :: Maybe String -> String -> String -> TixModule -> IO Mix
-readMix' mPkgNameVer hpcDir name tix = readMix [getMixPath mPkgNameVer hpcDir name tix] (Right tix)
+readMix' mPkgNameVer hpcDir name tix = readMix dirs (Right tix)
+    where dirs = nub $ (\x -> getMixPath x hpcDir name tix) <$> [Nothing, mPkgNameVer]
 
 -- | Create a list of coverage data from the tix input
 readCoverageData :: Maybe String             -- ^ Package name-version
