@@ -62,7 +62,7 @@ To prevent this from happening, hpc-coveralls provides the `run-cabal-test` comm
 
 Below are some of the conditions under which you will likely need to use `run-cabal-test`:
 - when using GHC 7.6 (hpc 0.6 known issue)
-- when using GHC 7.8 with multiple test suites covering the same module(s) (issue [#18](https://github.com/guillaume-nargeot/hpc-coveralls/issues/18))
+- when using GHC 7.8 with multiple test suites covering the same module(s) (issue [#18](https://github.com/guillaume-nargeot/hpc-coveralls/issues/18)) (fixed in GHC 7.10)
 
 ### Options
 
