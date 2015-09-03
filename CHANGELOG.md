@@ -1,5 +1,6 @@
 [1.0.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.0+is:closed)
 * Add support for cabal 1.22 / ghc 7.10 (issue #44)
+* Add --service-name option to support Travis-pro (issue #49)
 
 [0.9.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v0.9.0+is:closed)
 -----
