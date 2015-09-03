@@ -143,6 +143,14 @@ Use this option to specify the cabal file of the coverage report target package.
 This might be required in some cases, especially when building with cabal >= 1.22 and ghc >= 7.10, although hpc-coveralls assumes the package cabal file to be the unique file of extension ".cabal" in the current directory if it exists.
 For further details check [this issue](https://github.com/guillaume-nargeot/hpc-coveralls/issues/44).
 
+#### --service-name
+
+This option allows you to override the `service_name` value from the report sent to coveralls.io.
+You will have to specify it for example when using Travis-pro as in the example below as there is currently no way to programmatically determine:
+```bash
+--service-name=travis-pro
+```
+
 # Limitations
 
 Because of the way hpc works, coverage data is only generated for modules that are referenced directly or indirectly by the test suites.
