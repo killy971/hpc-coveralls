@@ -1,3 +1,7 @@
+[1.0.1](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.1+is:closed)
+-----
+* Relax transformers dependency lower bound (issue #50)
+
 [1.0.0](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.0+is:closed)
 -----
 * Add support for cabal 1.22 / ghc 7.10 (issue #44)
