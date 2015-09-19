@@ -31,6 +31,6 @@ hpcCoverallsArgs = CmdMain
     , optServiceName   = Nothing           &= explicit &= typ "TOKEN" &= name "service-name"   &= help "service-name (e.g. travis-pro)"
     , optRepoToken     = Nothing           &= explicit &= typ "TOKEN" &= name "repo-token"     &= help "Coveralls repo token"
     , argTestSuites    = []                &= typ "TEST-SUITES" &= args
-    } &= summary ("hpc-coveralls-" ++ versionString version ++ ", (C) Guillaume Nargeot 2014-2015")
+    } &= summary ("hpc-coveralls v" ++ versionString version ++ ", (C) Guillaume Nargeot 2014-2015")
       &= program "hpc-coveralls"
     where versionString = intercalate "." . map show . versionBranch
