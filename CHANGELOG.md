@@ -1,3 +1,7 @@
+[1.0.2](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.2+is:closed)
+-----
+* Fix output of --numeric-version command line option (issue #53)
+
 [1.0.1](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.1+is:closed)
 -----
 * Relax transformers dependency lower bound (issue #50)
