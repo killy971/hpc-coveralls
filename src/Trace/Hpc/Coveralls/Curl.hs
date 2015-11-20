@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 -- |
@@ -12,13 +13,14 @@
 module Trace.Hpc.Coveralls.Curl ( postJson, readCoverageResult, PostResult (..) ) where
 
 import           Control.Applicative
-import           Control.Monad
-import           Control.Retry
+import           Control.Monad (void, when)
+import           Control.Retry (RetryPolicy, exponentialBackoff, limitRetries, retrying)
 import           Data.Aeson
 import           Data.Aeson.Types (parseMaybe)
 import qualified Data.ByteString.Lazy.Char8 as LBS
 import           Data.List.Split
 import           Data.Maybe
+import           Data.Monoid ((<>))
 import           Network.Curl
 import           Safe
 import           Trace.Hpc.Coveralls.Types
@@ -60,7 +62,11 @@ expRetryPolicy = exponentialBackoff tenSecondsInMicroSeconds <> limitRetries 3
     where tenSecondsInMicroSeconds = 10 * 1000 * 1000
 
 performWithRetry :: IO (Maybe a) -> IO (Maybe a)
+#if MIN_VERSION_retry(0,7,0)
+performWithRetry = retrying expRetryPolicy isNothingM . const
+#else
 performWithRetry = retrying expRetryPolicy isNothingM
+#endif
     where isNothingM _ = return . isNothing
 
 -- | Extract the total coverage percentage value from coveralls coverage result
