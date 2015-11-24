@@ -1,3 +1,7 @@
+[1.0.3](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.3+is:closed)
+-----
+* Add upper bounds to fix issue related to retry-0.7 (issue #55)
+
 [1.0.2](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.2+is:closed)
 -----
 * Fix output of --numeric-version command line option (issue #53)
