@@ -1,5 +1,5 @@
 name:           hpc-coveralls
-version:        1.0.3
+version:        1.0.4
 synopsis:       Coveralls.io support for Haskell.
 description:
   This utility converts and sends Haskell projects hpc code coverage to
@@ -70,7 +70,7 @@ library
     retry          >= 0.5     && <0.8,
     safe           >= 0.3     && <0.4,
     split          >= 0.2.2   && <0.3,
-    transformers   >= 0.4.1   && <0.5
+    transformers   >= 0.4.1   && <0.6
 
 executable hpc-coveralls
   hs-source-dirs: src
@@ -91,7 +91,7 @@ executable hpc-coveralls
     retry          >= 0.5     && <0.8,
     safe           >= 0.3     && <0.4,
     split          >= 0.2.2   && <0.3,
-    transformers   >= 0.4.1   && <0.5
+    transformers   >= 0.4.1   && <0.6
   ghc-options:    -Wall -fwarn-tabs -fwarn-incomplete-uni-patterns
 
 executable run-cabal-test
