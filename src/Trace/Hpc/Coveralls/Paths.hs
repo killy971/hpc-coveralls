@@ -38,7 +38,7 @@ getMixPath :: Maybe String -- ^ target package name-version
            -> String       -- ^ hpc output base directory
            -> String       -- ^ test suite name
            -> TixModule    -- ^ tix module
-           -> FilePath     -- ^ mix file patch
+           -> FilePath     -- ^ mix file path
 getMixPath mPkgNameVer hpcDir testSuiteName tix = mixDir hpcDir ++ dirName ++ "/"
     where dirName = case span (/= '/') modName of
               (_, []) -> testSuiteName
