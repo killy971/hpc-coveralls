@@ -1,3 +1,7 @@
+[1.0.5](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.5+is:closed)
+-----
+* Allow aeson 1.0 (issue #60)
+
 [1.0.4](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.4+is:closed)
 -----
 * Fix dependencies to allow aeson 0.11 (issue #58)
