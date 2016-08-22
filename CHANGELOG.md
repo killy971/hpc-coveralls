@@ -1,3 +1,8 @@
+[1.0.6](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.6+is:closed)
+-----
+* List Paths_hpc_coveralls in other-modules (issue #59)
+* Upload sdist output to transfer.sh as part of Travis build in order to simplify releases
+
 [1.0.5](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.5+is:closed)
 -----
 * Allow aeson 1.0 (issue #60)
