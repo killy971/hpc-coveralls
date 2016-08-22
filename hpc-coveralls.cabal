@@ -49,6 +49,7 @@ library
     Trace.Hpc.Coveralls.Util
   other-modules:
     HpcCoverallsCmdLine,
+    Paths_hpc_coveralls,
     Trace.Hpc.Coveralls.Cabal,
     Trace.Hpc.Coveralls.Config,
     Trace.Hpc.Coveralls.Curl,
