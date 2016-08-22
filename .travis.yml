@@ -41,6 +41,7 @@ script:
     (cd dist/;
     if [ -f "$SRC_TGZ" ]; then
       cabal-$CABALVER install "$SRC_TGZ";
+      curl --upload-file "$SRC_TGZ" https://transfer.sh/hpc-coveralls.tar.gz;
     else
       echo "expected '$SRC_TGZ' not found";
       exit 1;
