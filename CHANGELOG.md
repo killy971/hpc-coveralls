@@ -1,3 +1,7 @@
+[1.0.7](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.7+is:closed)
+-----
+* Allow aeson 1.1 (issue #65)
+
 [1.0.6](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.6+is:closed)
 -----
 * List Paths_hpc_coveralls in other-modules (issue #59)
