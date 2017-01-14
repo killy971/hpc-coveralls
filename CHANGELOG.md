@@ -1,3 +1,7 @@
+[1.0.8](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.8+is:closed)
+-----
+* Allow directory 1.3 (issue #66)
+
 [1.0.7](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.7+is:closed)
 -----
 * Allow aeson 1.1 (issue #65)
