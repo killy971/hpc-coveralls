@@ -1,3 +1,5 @@
+{-# LANGUAGE CPP #-}
+
 -- |
 -- Module:      Trace.Hpc.Coveralls.Cabal
 -- Copyright:   (c) 2014-2015 Guillaume Nargeot
@@ -34,11 +36,21 @@ getPackageNameVersion file = do
         ParseFailed _ -> return Nothing
         ParseOk _warnings gpd -> return $ Just $ name ++ "-" ++ version
             where pkg = package . packageDescription $ gpd
-                  PackageName name = pkgName pkg
+                  name = unPackageName $ pkgName pkg
                   version = showVersion (pkgVersion pkg)
-                  showVersion = intercalate "." . map show . versionBranch
+                  showVersion = intercalate "." . map show . versionNumbers
 
 currDirPkgNameVer :: IO (Maybe String)
 currDirPkgNameVer = runMaybeT $ pkgNameVersion currentDir
     where pkgNameVersion = MaybeT . getPackageNameVersion <=< MaybeT . getCabalFile
           currentDir = "."
+
+#if !(MIN_VERSION_Cabal(1,22,0))
+unPackageName :: PackageName -> String
+unPackageName (PackageName name) = name
+#endif
+
+#if !(MIN_VERSION_Cabal(2,0,0))
+versionNumbers :: Version -> [Int]
+versionNumbers = versionBranch
+#endif
