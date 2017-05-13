@@ -1,4 +1,8 @@
-[1.0.8](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.9+is:closed)
+[1.0.10](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.10+is:closed)
+------
+* Allow building with GHC 8.2 (issue #68)
+
+[1.0.9](https://github.com/guillaume-nargeot/hpc-coveralls/issues?q=milestone:v1.0.9+is:closed)
 -----
 * Allow aeson 1.2 (issue #67)
 

@@ -1,5 +1,5 @@
 name:           hpc-coveralls
-version:        1.0.9
+version:        1.0.10
 synopsis:       Coveralls.io support for Haskell.
 description:
   This utility converts and sends Haskell projects hpc code coverage to
@@ -23,12 +23,12 @@ license:        BSD3
 license-file:   LICENSE
 author:         Guillaume Nargeot
 maintainer:     Guillaume Nargeot <guillaume+hackage@nargeot.com>
-copyright:      (c) 2014-2015 Guillaume Nargeot
+copyright:      (c) 2014-2017 Guillaume Nargeot
 category:       Control
 build-type:     Simple
 stability:      experimental
 cabal-version:  >= 1.8
-tested-with:    GHC == 7.6, GHC == 7.8, GHC == 7.10, GHC == 8.0
+tested-with:    GHC == 7.6, GHC == 7.8, GHC == 7.10, GHC == 8.0, GHC == 8.2
 homepage:       https://github.com/guillaume-nargeot/hpc-coveralls
 bug-reports:    https://github.com/guillaume-nargeot/hpc-coveralls/issues
 
