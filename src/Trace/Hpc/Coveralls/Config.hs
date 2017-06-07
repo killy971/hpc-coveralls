@@ -6,6 +6,9 @@ data Config = Config {
     excludedDirs :: ![FilePath],
     coverageMode :: !CoverageMode,
     cabalFile    :: !(Maybe FilePath),
+    mixDirPath   :: !(Maybe FilePath),
+    tixDirPath   :: !(Maybe FilePath),
+    useStackCov  :: !Bool,
     serviceName  :: !(Maybe String),
     repoToken    :: !(Maybe String),
     testSuites   :: ![String]

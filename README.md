@@ -151,6 +151,18 @@ You will have to specify it for example when using Travis-pro as in the example 
 --service-name=travis-pro
 ```
 
+#### --tix-dir
+
+Use this option to specify the tix directory for searching tix files.
+
+#### --mix-dir
+
+Use this option to specify the mix directory for searching mix files.
+
+#### --use-stack-cov
+
+The boolean option specifies to use stack coverage reports.
+
 # Limitations
 
 Because of the way hpc works, coverage data is only generated for modules that are referenced directly or indirectly by the test suites.

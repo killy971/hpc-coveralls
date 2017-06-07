@@ -79,9 +79,14 @@ testGroupByIndex = "groupByIndex" ~: [
     groupByIndex 3 [(1, 2), (1, 3)] @?= [[], [3, 2], []],
     groupByIndex 5 [(0, 2), (2, 5), (2, 3), (4, 13), (4, 11), (4, 7)] @?= [[2], [], [3, 5], [], [7, 11, 13]]]
 
+testStripString = "stripString" ~: [
+    stripString " aa " @?= "aa",
+    stripString "\nbb" @?= "bb"]
+
 testUtil = "Util" ~: [
     testMapFirst,
     testMapLast,
     testSubSeq,
     testSubSubSeq,
-    testGroupByIndex]
+    testGroupByIndex,
+    testStripString]

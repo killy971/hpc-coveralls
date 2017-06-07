@@ -12,6 +12,9 @@ data HpcCoverallsArgs = CmdMain
     { optExcludeDirs   :: [String]
     , argTestSuites    :: [String]
     , optCabalFile     :: Maybe String
+    , optTixDirPath    :: Maybe String
+    , optMixDirPath    :: Maybe String
+    , optUseStackCov   :: Bool
     , optServiceName   :: Maybe String
     , optRepoToken     :: Maybe String
     , optDisplayReport :: Bool
@@ -28,6 +31,9 @@ hpcCoverallsArgs = CmdMain
     , optDontSend      = False             &= explicit                &= name "dont-send"      &= help "Do not send the report to coveralls.io"
     , optCoverageMode  = AllowPartialLines &= explicit &= typ "MODE"  &= name "coverage-mode"  &= help "Coverage conversion mode: AllowPartialLines (default), StrictlyFullLines"
     , optCabalFile     = Nothing           &= explicit &= typ "FILE"  &= name "cabal-file"     &= help "Cabal file (ex.: module-name.cabal)"
+    , optTixDirPath    = Nothing           &= explicit &= typDir      &= name "tix-dir"        &= help "Tix dir (ex.: dist/hpc/tix/)"
+    , optMixDirPath    = Nothing           &= explicit &= typDir      &= name "mix-dir"        &= help "Mix dir (ex.: dist/hpc/mix/)"
+    , optUseStackCov   = False             &= explicit                &= name "use-stack-cov"  &= help "Use the stack coverage report"
     , optServiceName   = Nothing           &= explicit &= typ "TOKEN" &= name "service-name"   &= help "service-name (e.g. travis-pro)"
     , optRepoToken     = Nothing           &= explicit &= typ "TOKEN" &= name "repo-token"     &= help "Coveralls repo token"
     , argTestSuites    = []                &= typ "TEST-SUITES" &= args

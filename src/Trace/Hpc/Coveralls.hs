@@ -13,7 +13,6 @@ module Trace.Hpc.Coveralls ( generateCoverallsFromTix ) where
 
 import           Control.Applicative
 import           Data.Aeson
-import           Data.Aeson.Types ()
 import qualified Data.ByteString.Lazy.Char8 as LBS
 import           Data.Digest.Pure.MD5
 import           Data.Function
@@ -104,21 +103,25 @@ mergeModuleCoverageData (source, mix, tixs1) (_, _, tixs2) =
 mergeCoverageData :: [TestSuiteCoverageData] -> TestSuiteCoverageData
 mergeCoverageData = foldr1 (M.unionWith mergeModuleCoverageData)
 
-readMix' :: Maybe String -> String -> String -> TixModule -> IO Mix
-readMix' mPkgNameVer hpcDir name tix = readMix dirs (Right tix)
-    where dirs = nub $ (\x -> getMixPath x hpcDir name tix) <$> [Nothing, mPkgNameVer]
+readMix' :: Maybe String -> HpcDir -> String -> TixModule -> IO Mix
+readMix' mPkgNameVer hpcDir name tix = readMix (getMixDirPaths mPkgNameVer hpcDir name tix) (Right tix)
 
 -- | Create a list of coverage data from the tix input
 readCoverageData :: Maybe String             -- ^ Package name-version
-                 -> String                   -- ^ hpc data directory
+                 -> HpcDir                   -- ^ hpc data directory
                  -> [String]                 -- ^ excluded source folders
                  -> String                   -- ^ test suite name
                  -> IO TestSuiteCoverageData -- ^ coverage data list
 readCoverageData mPkgNameVer hpcDir excludeDirPatterns testSuiteName = do
-    let tixPath = getTixPath hpcDir testSuiteName
+    let tixPath = getTixFilePath hpcDir testSuiteName
     mTix <- readTix tixPath
+
     case mTix of
-        Nothing -> putStrLn ("Couldn't find the file " ++ tixPath) >> dumpDirectoryTree hpcDir >> ioFailure
+        Nothing -> do
+            putStrLn $ "Couldn't find the file " ++ tixPath
+            dumpDirectoryTree $ tixDir hpcDir
+            ioFailure
+
         Just (Tix tixs) -> do
             mixs <- mapM (readMix' mPkgNameVer hpcDir testSuiteName) tixs
             let files = map filePath mixs
@@ -137,19 +140,24 @@ generateCoverallsFromTix :: String       -- ^ CI name
                          -> Maybe String -- ^ Package name-version
                          -> IO Value     -- ^ code coverage result in json format
 generateCoverallsFromTix serviceName jobId gitInfo config mPkgNameVer = do
-    mHpcDir <- firstExistingDirectory hpcDirs
+    mHpcDir <- getHpcDir config
     case mHpcDir of
-        Nothing -> putStrLn "Couldn't find the hpc data directory" >> dumpDirectory distDir >> ioFailure
-        Just hpcDir -> do
+        Left msg -> do
+            putStrLn "Couldn't find the hpc data directory"
+            putStrLn $ "Error: " ++ msg
+            ioFailure
+
+        Right hpcDir -> do
             testSuitesCoverages <- mapM (readCoverageData mPkgNameVer hpcDir excludedDirPatterns) testSuiteNames
             let coverageData = mergeCoverageData testSuitesCoverages
-            return $ toCoverallsJson serviceName jobId repoTokenM gitInfo converter coverageData
-            where excludedDirPatterns = excludedDirs config
-                  testSuiteNames = testSuites config
-                  repoTokenM = repoToken config
-                  converter = case coverageMode config of
-                      StrictlyFullLines -> strictConverter
-                      AllowPartialLines -> looseConverter
+            return $ toCoverallsJson serviceName jobId mRepoToken gitInfo converter coverageData
+    where
+        excludedDirPatterns = excludedDirs config
+        testSuiteNames = testSuites config
+        mRepoToken = repoToken config
+        converter = case coverageMode config of
+            StrictlyFullLines -> strictConverter
+            AllowPartialLines -> looseConverter
 
 ioFailure :: IO a
 ioFailure = putStrLn ("You can get support at " ++ gitterUrl) >> exitFailure

@@ -11,42 +11,97 @@
 
 module Trace.Hpc.Coveralls.Paths where
 
-import Control.Monad
-import Data.Maybe
-import Data.Traversable (traverse)
-import System.Directory (
-    doesDirectoryExist, getDirectoryContents
-    )
-import System.Directory.Tree (
-    AnchoredDirTree(..), dirTree, readDirectoryWith
-    )
-import Trace.Hpc.Tix
+import           Control.Applicative
+import           Control.Monad
+import           Data.List                  (nub)
+import           Data.Maybe                 (fromMaybe)
+import           Data.Traversable           (traverse)
+import           System.Directory           (doesDirectoryExist,
+                                             getDirectoryContents)
+import           System.Directory.Tree      (AnchoredDirTree (..), dirTree,
+                                             readDirectoryWith)
+import           System.FilePath
+import           Trace.Hpc.Coveralls.Config
+import           Trace.Hpc.Coveralls.Stack
+import           Trace.Hpc.Coveralls.Util
+import           Trace.Hpc.Tix
 
-distDir :: FilePath
-distDir = "dist/"
+data HpcDir = HpcDir
+  { tixDir        :: !FilePath
+  , mixDir        :: !FilePath
+  } deriving (Show, Eq)
 
-hpcDirs :: [FilePath]
-hpcDirs = map (distDir ++) ["hpc/vanilla/", "hpc/"]
+getHpcDir :: Config -> IO (Either String HpcDir)
+getHpcDir config
+    | useStackCov config = stackHpcDir
+getHpcDir config = buildHpcDir (tixDirPath config) (mixDirPath config)
 
-tixDir :: String -> FilePath
-tixDir = (++ "tix/")
+cabalDistDir :: FilePath
+cabalDistDir = "dist/"
 
-mixDir :: String -> FilePath
-mixDir = (++ "mix/")
+cabalHpcDirs :: [FilePath]
+cabalHpcDirs = map (cabalDistDir ++) ["hpc/vanilla/", "hpc/"]
 
-getMixPath :: Maybe String -- ^ target package name-version
-           -> String       -- ^ hpc output base directory
-           -> String       -- ^ test suite name
-           -> TixModule    -- ^ tix module
-           -> FilePath     -- ^ mix file path
-getMixPath mPkgNameVer hpcDir testSuiteName tix = mixDir hpcDir ++ dirName ++ "/"
-    where dirName = case span (/= '/') modName of
-              (_, []) -> testSuiteName
-              (packageId, _) -> fromMaybe packageId mPkgNameVer
-          TixModule modName _ _ _ = tix
+stackHpcDir :: IO (Either String HpcDir)
+stackHpcDir = do
+    canExecStack <- checkStackVersion
+    canGetStackHpc <- whenM canExecStack (Left "cannot exec `stack`") $ do
+        isStackProject <- checkStackProject
+        return $ if isStackProject
+            then Right ()
+            else Left "this is not a stack project"
 
-getTixPath :: String -> String -> FilePath
-getTixPath hpcDir testSuiteName = tixDir hpcDir ++ testSuiteName ++ "/" ++ getTixFileName testSuiteName
+    case canGetStackHpc of
+        Right _  -> Right <$> getStackHpcDir
+        Left msg -> return $ Left msg
+
+getStackHpcDir :: IO HpcDir
+getStackHpcDir = HpcDir
+    <$> ((</>) <$> stackHpcRootPath <*> stackProjectName)
+    <*> stackDistHpcRootPath
+
+buildHpcDir :: Maybe FilePath -> Maybe FilePath -> IO (Either String HpcDir)
+buildHpcDir (Just tixD) (Just mixD) = return . Right $ HpcDir tixD mixD
+buildHpcDir mtixD mmixD = do
+    mPath <- firstExistingDirectory cabalHpcDirs
+    mhpcDir <- case mPath of
+        Just hpcDir -> return . Right $ HpcDir
+          { tixDir        = hpcDir </> "tix"
+          , mixDir        = hpcDir </> "mix"
+          }
+        Nothing     -> do
+            mhpcDir <- stackHpcDir
+            case mhpcDir of
+                Right _ -> return mhpcDir
+                Left  _ -> return . Left $ "not found either cabal or stack hpc directory"
+
+    case mhpcDir of
+        Left _       -> return mhpcDir
+        Right hpcDir -> return . Right $ HpcDir
+          { tixDir        = fromMaybe (tixDir hpcDir) mtixD
+          , mixDir        = fromMaybe (mixDir hpcDir) mmixD
+          }
+
+getMixDirPaths :: Maybe String -- ^ target package name-version
+               -> HpcDir       -- ^ hpc output base directory
+               -> String       -- ^ test suite name
+               -> TixModule    -- ^ tix module
+               -> [FilePath]   -- ^ mix file paths
+getMixDirPaths mPkgNameVer hpcDir testSuiteName tix = nub $ do
+    dirName <- dirs
+    return $ mixDir hpcDir </> dirName
+    where
+        dirs = case span (/= '/') modName of
+              (_, [])        -> [ testSuiteName ]
+              (packageId, _) -> [ "", packageId ] ++ maybe [] pure mPkgNameVer
+
+        TixModule modName _ _ _ = tix
+
+getTixFilePath :: HpcDir -> String -> FilePath
+getTixFilePath hpcDir testSuiteName
+    =   tixDir hpcDir
+    </> testSuiteName
+    </> getTixFileName testSuiteName
 
 firstExistingDirectory :: [FilePath] -> IO (Maybe FilePath)
 firstExistingDirectory = fmap msum . mapM pathIfExist
