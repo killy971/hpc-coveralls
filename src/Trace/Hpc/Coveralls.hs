@@ -19,6 +19,8 @@ import           Data.Digest.Pure.MD5
 import           Data.Function
 import           Data.List
 import qualified Data.Map.Strict as M
+import           Data.Semigroup ((<>))
+import           System.Directory (doesDirectoryExist)
 import           System.Exit (exitFailure)
 import           Trace.Hpc.Coveralls.Config
 import           Trace.Hpc.Coveralls.GitInfo (GitInfo)
@@ -137,19 +139,32 @@ generateCoverallsFromTix :: String       -- ^ CI name
                          -> Maybe String -- ^ Package name-version
                          -> IO Value     -- ^ code coverage result in json format
 generateCoverallsFromTix serviceName jobId gitInfo config mPkgNameVer = do
-    mHpcDir <- firstExistingDirectory hpcDirs
-    case mHpcDir of
-        Nothing -> putStrLn "Couldn't find the hpc data directory" >> dumpDirectory distDir >> ioFailure
-        Just hpcDir -> do
-            testSuitesCoverages <- mapM (readCoverageData mPkgNameVer hpcDir excludedDirPatterns) testSuiteNames
-            let coverageData = mergeCoverageData testSuitesCoverages
-            return $ toCoverallsJson serviceName jobId repoTokenM gitInfo converter coverageData
-            where excludedDirPatterns = excludedDirs config
-                  testSuiteNames = testSuites config
-                  repoTokenM = repoToken config
-                  converter = case coverageMode config of
-                      StrictlyFullLines -> strictConverter
-                      AllowPartialLines -> looseConverter
+    hpcDir <- findHpcDataDir config
+    testSuitesCoverages <- mapM (readCoverageData mPkgNameVer hpcDir excludedDirPatterns) testSuiteNames
+    let coverageData = mergeCoverageData testSuitesCoverages
+    return $ toCoverallsJson serviceName jobId repoTokenM gitInfo converter coverageData
+    where excludedDirPatterns = excludedDirs config
+          testSuiteNames = testSuites config
+          repoTokenM = repoToken config
+          converter = case coverageMode config of
+              StrictlyFullLines -> strictConverter
+              AllowPartialLines -> looseConverter
+
+findHpcDataDir :: Config -> IO FilePath
+findHpcDataDir config = do
+  case hpcDirOverride config of
+    Nothing -> do
+      mHpcDir <- firstExistingDirectory hpcDirs
+      case mHpcDir of
+        Nothing     -> putStrLn "Couldn't find the hpc data directory" >> dumpDirectory distDir >> ioFailure
+        Just hpcDir -> pure hpcDir
+    Just hpcDirOverride -> do
+      let hpcDir = hpcDirOverride <> "/"
+      doesExist <- doesDirectoryExist hpcDir
+      if doesExist == False
+        then putStrLn ("The hpc data directory override provided does not exist: " <> hpcDir) >> ioFailure
+        else pure hpcDir
+    
 
 ioFailure :: IO a
 ioFailure = putStrLn ("You can get support at " ++ gitterUrl) >> exitFailure

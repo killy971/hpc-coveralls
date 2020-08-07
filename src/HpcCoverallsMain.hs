@@ -46,6 +46,7 @@ getConfig hca = Config
     (optCabalFile hca)
     (optServiceName hca)
     (optRepoToken hca)
+    (optHpcDir hca)
     <$> listToMaybe (argTestSuites hca)
 
 main :: IO ()

@@ -23,11 +23,16 @@ import System.Directory
 
 getCabalFile :: FilePath -> IO (Maybe FilePath)
 getCabalFile dir = do
-    files <- (filter isCabal <$> getDirectoryContents dir) >>= filterM doesFileExist
-    case files of
-        [file] -> return $ Just file
-        _ -> return Nothing
-    where isCabal filename = ".cabal" `isSuffixOf` filename && length filename > 6
+    cabalFilesInDir <- filter isCabal <$> getDirectoryContents dir
+    cabalFiles <- filterM doesFileExist (mkFullPath <$> cabalFilesInDir)
+    case cabalFiles of
+        [file] -> do
+          return $ Just file
+        _ -> do
+          return Nothing
+    where
+      isCabal filename = ".cabal" `isSuffixOf` filename && length filename > 6
+      mkFullPath = ((dir <> "/") <>)
 
 getPackageNameVersion :: FilePath -> IO (Maybe String)
 getPackageNameVersion file = do

@@ -151,6 +151,40 @@ You will have to specify it for example when using Travis-pro as in the example 
 --service-name=travis-pro
 ```
 
+#### --hpc-dir
+
+This option allows you to manually specify the hpc data directory to use. The behaviour without this option is to attempt to find the hpc directory in the typical places in the current directory.
+```bash
+--hpc-dir=/dir/share/hpc
+```
+
+This directory should contain your hpc data (mix files and tix files) in the standard directory structure for hpc output, for example:
+
+```bash
+hpc
+├── mix
+│   ├── my-lib-0.1.0.0
+│   │   └── my-lib-0.1.0.0-inplace
+│   │       ├── My.Lib.A.mix
+│   │       ├── My.Lib.B.mix
+│   |       └── My.Lib.C.mix
+│   ├── my-lib-test
+│   │   ├── SomeSpec.mix
+│   │   ├── SomeOtherSpec.mix
+│       └── Main.mix
+│   └── my-lib-test2
+│       ├── SomeSpec2.mix
+│       ├── SomeOtherSpec2.mix
+│       └── Main.mix
+└── tix
+    ├── my-lib-0.1.0.0
+    │   └── my-lib-0.1.0.0.tix
+    ├── my-lib-test
+    │   └── my-lib-test.tix
+    └── my-lib-test2
+        └── my-lib-test2.tix
+```
+
 # Limitations
 
 Because of the way hpc works, coverage data is only generated for modules that are referenced directly or indirectly by the test suites.
