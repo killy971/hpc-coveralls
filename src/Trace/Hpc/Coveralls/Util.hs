@@ -10,6 +10,7 @@
 module Trace.Hpc.Coveralls.Util where
 
 import Data.List
+import Data.Char
 
 fst3 :: (a, b, c) -> a
 fst3 (x, _, _) = x
@@ -58,3 +59,10 @@ groupByIndex size = take size . flip (++) (repeat []) . groupByIndex' 0 []
           groupByIndex' i ys xx@((xi, x) : xs) = if xi == i
               then groupByIndex' i (x : ys) xs
               else ys : groupByIndex' (i + 1) [] xx
+
+stripString :: String -> String
+stripString = takeWhile (not . isSpace) . dropWhile isSpace
+
+whenM :: Monad m => Bool -> a -> m a -> m a
+whenM True  _ m = m
+whenM False v _ = return v
