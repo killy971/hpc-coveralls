@@ -34,7 +34,8 @@ getServiceAndJobID = do
            ("CIRCLECI",    ("circleci",  "CIRCLE_BUILD_NUM")),
            ("SEMAPHORE",   ("semaphore", "REVISION")),
            ("JENKINS_URL", ("jenkins",   "BUILD_ID")),
-           ("CI_NAME",     ("codeship",  "CI_BUILD_NUMBER"))]
+           ("CI_NAME",     ("codeship",  "CI_BUILD_NUMBER")),
+           ("BUILDKITE",   ("buildkite", "BUILDKITE_BUILD_NUMBER"))]
 
 writeJson :: String -> Value -> IO ()
 writeJson filePath = BSL.writeFile filePath . encode
