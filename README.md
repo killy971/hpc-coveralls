@@ -151,6 +151,56 @@ You will have to specify it for example when using Travis-pro as in the example 
 --service-name=travis-pro
 ```
 
+#### --hpc-dir
+
+This option allows you to manually specify a number of directories to search for hpc output. The behaviour without this option is to attempt to find the hpc data in the typical places in the current directory.
+```bash
+--hpc-dir=/dir/share/hpc
+```
+
+This directory should contain your hpc data (mix files and tix files) in the standard directory structure for hpc output, for example:
+
+```bash
+hpc
+├── mix
+│   ├── my-lib-0.1.0.0
+│   │   └── my-lib-0.1.0.0-inplace
+│   │       ├── My.Lib.A.mix
+│   │       ├── My.Lib.B.mix
+│   |       └── My.Lib.C.mix
+│   ├── my-lib-test
+│   │   ├── SomeSpec.mix
+│   │   ├── SomeOtherSpec.mix
+│       └── Main.mix
+│   └── my-lib-test2
+│       ├── SomeSpec2.mix
+│       ├── SomeOtherSpec2.mix
+│       └── Main.mix
+└── tix
+    ├── my-lib-0.1.0.0
+    │   └── my-lib-0.1.0.0.tix
+    ├── my-lib-test
+    │   └── my-lib-test.tix
+    └── my-lib-test2
+        └── my-lib-test2.tix
+```
+
+When using hpc-coveralls with a cabal.project, your invocation will probably include:
+```bash
+--hpc-dir ./dist-newstyle/build/x86_64-linux/ghc-8.6.5/my-package1 --hpc-dir ./dist-newstyle/build/x86_64-linux/ghc-8.6.5/my-package2
+```
+
+hpc-coveralls is not yet smart enough to discover these directories for you.
+
+### --package-dir
+
+This option allows you to specify a number of directories to search for cabal and source files. This might, for example, be used in a "cabal.project" with multiple Haskell packages.
+
+It will only be used if `--cabal-file` is not used.
+```bash
+--package-dir ./my-lib-1 --package-dir ./my-lib-2
+```
+
 # Limitations
 
 Because of the way hpc works, coverage data is only generated for modules that are referenced directly or indirectly by the test suites.

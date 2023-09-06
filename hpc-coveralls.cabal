@@ -44,6 +44,7 @@ library
   hs-source-dirs: src
   exposed-modules:
     Trace.Hpc.Coveralls,
+    Trace.Hpc.Coverage,
     Trace.Hpc.Coveralls.Lix,
     Trace.Hpc.Coveralls.Types,
     Trace.Hpc.Coveralls.Util

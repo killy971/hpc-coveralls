@@ -9,7 +9,10 @@
 --
 -- Functions for converting and sending hpc output to coveralls.io.
 
-module Trace.Hpc.Coveralls ( generateCoverallsFromTix ) where
+module Trace.Hpc.Coveralls ( toCoverallsJson
+                           , strictConverter
+                           , looseConverter
+                           ) where
 
 import           Control.Applicative
 import           Data.Aeson
@@ -18,24 +21,15 @@ import qualified Data.ByteString.Lazy.Char8 as LBS
 import           Data.Digest.Pure.MD5
 import           Data.Function
 import           Data.List
+import           Data.Traversable (for)
+import           Data.Semigroup (Semigroup((<>)))
 import qualified Data.Map.Strict as M
-import           System.Exit (exitFailure)
-import           Trace.Hpc.Coveralls.Config
 import           Trace.Hpc.Coveralls.GitInfo (GitInfo)
 import           Trace.Hpc.Coveralls.Lix
-import           Trace.Hpc.Coveralls.Paths
 import           Trace.Hpc.Coveralls.Types
 import           Trace.Hpc.Coveralls.Util
 import           Trace.Hpc.Mix
-import           Trace.Hpc.Tix
 import           Trace.Hpc.Util
-
-type ModuleCoverageData = (
-    String,    -- file source code
-    Mix,       -- module index data
-    [Integer]) -- tixs recorded by hpc
-
-type TestSuiteCoverageData = M.Map FilePath ModuleCoverageData
 
 -- single file coverage data in the format defined by coveralls.io
 type SimpleCoverage = [CoverageValue]
@@ -87,7 +81,7 @@ coverageToJson converter filePath (source, mix, tixs) = object [
           getExprSource' = getExprSource $ lines source
 
 toCoverallsJson :: String -> String -> Maybe String -> GitInfo -> LixConverter -> TestSuiteCoverageData -> Value
-toCoverallsJson serviceName jobId repoTokenM gitInfo converter testSuiteCoverageData =
+toCoverallsJson serviceName jobId repoTokenM gitInfo converter (TestSuiteCoverageData testSuiteCoverageData) =
     object $ if serviceName == "travis-ci" then withRepoToken else withGitInfo
     where base = [
               "service_job_id" .= jobId,
@@ -96,61 +90,3 @@ toCoverallsJson serviceName jobId repoTokenM gitInfo converter testSuiteCoverage
           toJsonCoverageList = map (uncurry $ coverageToJson converter) . M.toList
           withRepoToken = mcons (("repo_token" .=) <$> repoTokenM) base
           withGitInfo   = ("git" .= gitInfo) : withRepoToken
-
-mergeModuleCoverageData :: ModuleCoverageData -> ModuleCoverageData -> ModuleCoverageData
-mergeModuleCoverageData (source, mix, tixs1) (_, _, tixs2) =
-    (source, mix, zipWith (+) tixs1 tixs2)
-
-mergeCoverageData :: [TestSuiteCoverageData] -> TestSuiteCoverageData
-mergeCoverageData = foldr1 (M.unionWith mergeModuleCoverageData)
-
-readMix' :: Maybe String -> String -> String -> TixModule -> IO Mix
-readMix' mPkgNameVer hpcDir name tix = readMix dirs (Right tix)
-    where dirs = nub $ (\x -> getMixPath x hpcDir name tix) <$> [Nothing, mPkgNameVer]
-
--- | Create a list of coverage data from the tix input
-readCoverageData :: Maybe String             -- ^ Package name-version
-                 -> String                   -- ^ hpc data directory
-                 -> [String]                 -- ^ excluded source folders
-                 -> String                   -- ^ test suite name
-                 -> IO TestSuiteCoverageData -- ^ coverage data list
-readCoverageData mPkgNameVer hpcDir excludeDirPatterns testSuiteName = do
-    let tixPath = getTixPath hpcDir testSuiteName
-    mTix <- readTix tixPath
-    case mTix of
-        Nothing -> putStrLn ("Couldn't find the file " ++ tixPath) >> dumpDirectoryTree hpcDir >> ioFailure
-        Just (Tix tixs) -> do
-            mixs <- mapM (readMix' mPkgNameVer hpcDir testSuiteName) tixs
-            let files = map filePath mixs
-            sources <- mapM readFile files
-            let coverageDataList = zip4 files sources mixs (map tixModuleTixs tixs)
-            let filteredCoverageDataList = filter sourceDirFilter coverageDataList
-            return $ M.fromList $ map toFirstAndRest filteredCoverageDataList
-            where filePath (Mix fp _ _ _ _) = fp
-                  sourceDirFilter = not . matchAny excludeDirPatterns . fst4
-
--- | Generate coveralls json formatted code coverage from hpc coverage data
-generateCoverallsFromTix :: String       -- ^ CI name
-                         -> String       -- ^ CI Job ID
-                         -> GitInfo      -- ^ Git repo information
-                         -> Config       -- ^ hpc-coveralls configuration
-                         -> Maybe String -- ^ Package name-version
-                         -> IO Value     -- ^ code coverage result in json format
-generateCoverallsFromTix serviceName jobId gitInfo config mPkgNameVer = do
-    mHpcDir <- firstExistingDirectory hpcDirs
-    case mHpcDir of
-        Nothing -> putStrLn "Couldn't find the hpc data directory" >> dumpDirectory distDir >> ioFailure
-        Just hpcDir -> do
-            testSuitesCoverages <- mapM (readCoverageData mPkgNameVer hpcDir excludedDirPatterns) testSuiteNames
-            let coverageData = mergeCoverageData testSuitesCoverages
-            return $ toCoverallsJson serviceName jobId repoTokenM gitInfo converter coverageData
-            where excludedDirPatterns = excludedDirs config
-                  testSuiteNames = testSuites config
-                  repoTokenM = repoToken config
-                  converter = case coverageMode config of
-                      StrictlyFullLines -> strictConverter
-                      AllowPartialLines -> looseConverter
-
-ioFailure :: IO a
-ioFailure = putStrLn ("You can get support at " ++ gitterUrl) >> exitFailure
-    where gitterUrl = "https://gitter.im/guillaume-nargeot/hpc-coveralls" :: String

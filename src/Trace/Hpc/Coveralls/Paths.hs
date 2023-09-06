@@ -13,20 +13,27 @@ module Trace.Hpc.Coveralls.Paths where
 
 import Control.Monad
 import Data.Maybe
+import Data.Semigroup ((<>))
 import Data.Traversable (traverse)
 import System.Directory (
-    doesDirectoryExist, getDirectoryContents
+    doesDirectoryExist, getDirectoryContents, doesFileExist
     )
 import System.Directory.Tree (
     AnchoredDirTree(..), dirTree, readDirectoryWith
     )
 import Trace.Hpc.Tix
+import Trace.Hpc.Coveralls.Types
 
 distDir :: FilePath
 distDir = "dist/"
 
-hpcDirs :: [FilePath]
-hpcDirs = map (distDir ++) ["hpc/vanilla/", "hpc/"]
+hpcDistDirs :: [FilePath]
+hpcDistDirs = map (distDir ++) ["hpc/vanilla/", "hpc/"]
+
+cabalProjectHpcDirs :: FilePath -> [PackageIdentifier] -> [FilePath]
+cabalProjectHpcDirs hpcBaseDir = fmap pkgDir 
+  where
+    pkgDir p = hpcBaseDir <> "/" <> (asNameVer p) <> "/"
 
 tixDir :: String -> FilePath
 tixDir = (++ "tix/")
@@ -45,14 +52,30 @@ getMixPath mPkgNameVer hpcDir testSuiteName tix = mixDir hpcDir ++ dirName ++ "/
               (packageId, _) -> fromMaybe packageId mPkgNameVer
           TixModule modName _ _ _ = tix
 
-getTixPath :: String -> String -> FilePath
-getTixPath hpcDir testSuiteName = tixDir hpcDir ++ testSuiteName ++ "/" ++ getTixFileName testSuiteName
+-- | Given a list of hpc data directories, return a list of possible
+-- tix file paths for the given test suite.
+possibleTixFileLocations :: [FilePath] -> String -> [FilePath]
+possibleTixFileLocations hpcDirs testSuiteName = possibleTixFiles
+  where
+    -- List of possible tix file paths
+    possibleTixFiles :: [FilePath]
+    possibleTixFiles = tixFileInDir <$> hpcDirs
+
+    -- Path of the tix file in the given hpc directory.
+    tixFileInDir :: FilePath -> FilePath
+    tixFileInDir hpcDir = tixDir hpcDir ++ testSuiteName ++ "/" ++ getTixFileName testSuiteName
 
 firstExistingDirectory :: [FilePath] -> IO (Maybe FilePath)
 firstExistingDirectory = fmap msum . mapM pathIfExist
     where pathIfExist path = do
               pathExists <- doesDirectoryExist path
               return $ if pathExists then Just path else Nothing
+
+firstExistingFile :: [FilePath] -> IO (Maybe FilePath)
+firstExistingFile = fmap msum . mapM fileIfExist
+    where fileIfExist path = do
+              fileExists <- doesFileExist path
+              return $ if fileExists then Just path else Nothing
 
 dumpDirectory :: FilePath -> IO ()
 dumpDirectory path = do
